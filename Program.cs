@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.Text.RegularExpressions;
 
 class Program
 {
@@ -9,29 +10,36 @@ class Program
         string options = $"1. {currencies[0].ToStringValue()}\n 2. {currencies[1].ToStringValue()}\n 3. {currencies[2].ToStringValue()}\n 4. {currencies[3].ToStringValue()}\n 5. {currencies[4].ToStringValue()}";
         ConsoleKeyInfo keyInfo;
         bool invalidInput = false;
+        string chosenCurrencyFrom = "";
+        string chosenCurrencyTo = "";
         do{           
             Console.WriteLine($"Hello, welcome to David's Currency Converter. \n Please select a currency to convert FROM:\n {options}");
-
+            
             keyInfo = Console.ReadKey();
             switch(keyInfo.Key) {
                 case ConsoleKey.D1:
                     Console.WriteLine($"\nYou selected {currencies[0].ToStringValue()} as the currency to convert FROM.");
                     invalidInput = true;
+                    chosenCurrencyFrom = currencies[0].ToStringValue();
                     break;
                 case ConsoleKey.D2:
                     Console.WriteLine($"\nYou selected {currencies[1].ToStringValue()} as the currency to convert FROM.");
+                    chosenCurrencyFrom = currencies[1].ToStringValue();
                     invalidInput = true;
                     break;
                 case ConsoleKey.D3:
                     Console.WriteLine($"\nYou selected {currencies[2].ToStringValue()} as the currency to convert FROM.");
+                    chosenCurrencyFrom = currencies[2].ToStringValue();
                     invalidInput = true;
                     break;
                 case ConsoleKey.D4:
                     Console.WriteLine($"\nYou selected {currencies[3].ToStringValue()} as the currency to convert FROM.");
+                    chosenCurrencyFrom = currencies[3].ToStringValue();
                     invalidInput = true;
                     break;
                 case ConsoleKey.D5:
                     Console.WriteLine($"\nYou selected {currencies[4].ToStringValue()} as the currency to convert FROM.");
+                    chosenCurrencyFrom = currencies[4].ToStringValue();
                     invalidInput = true;
                     break;
                 default:
@@ -40,12 +48,48 @@ class Program
             }
         }while(!invalidInput);
 
-        CurrencyAPI api = new CurrencyAPI();
-        var exchangeRate = api.Get("https://api.freecurrencyapi.com/v1/latest?apikey=x0fISZ5yVuubfp91QA5YJyisbCvxqKkMMpjkOdkc&currencies=EUR%2CUSD%2CCAD");
-        Console.WriteLine("CAD TO USD IS: " + exchangeRate);
+        do{           
+            Console.WriteLine($"\n Please select a currency to convert TO:\n {options}");
+            
+            keyInfo = Console.ReadKey();
+            switch(keyInfo.Key) {
+                case ConsoleKey.D1:
+                    Console.WriteLine($"\nYou selected {currencies[0].ToStringValue()} as the currency to convert TO.");
+                    invalidInput = true;
+                    chosenCurrencyTo = currencies[0].ToStringValue();
+                    break;
+                case ConsoleKey.D2:
+                    Console.WriteLine($"\nYou selected {currencies[1].ToStringValue()} as the currency to convert TO.");
+                    chosenCurrencyTo = currencies[1].ToStringValue();
+                    invalidInput = true;
+                    break;
+                case ConsoleKey.D3:
+                    Console.WriteLine($"\nYou selected {currencies[2].ToStringValue()} as the currency to convert TO.");
+                    chosenCurrencyTo = currencies[2].ToStringValue();
+                    invalidInput = true;
+                    break;
+                case ConsoleKey.D4:
+                    Console.WriteLine($"\nYou selected {currencies[3].ToStringValue()} as the currency to convert TO.");
+                    chosenCurrencyTo = currencies[3].ToStringValue();
+                    invalidInput = true;
+                    break;
+                case ConsoleKey.D5:
+                    Console.WriteLine($"\nYou selected {currencies[4].ToStringValue()} as the currency to convert TO.");
+                    chosenCurrencyTo = currencies[4].ToStringValue();
+                    invalidInput = true;
+                    break;
+                default:
+                    Console.WriteLine("\nInvalid option. Please press a key from 1-5.");
+                    break;
+            }
+        }while(!invalidInput);
 
-        
-        
+        CurrencyAPI api = new CurrencyAPI();
+        var exchangeRate = api.Get($"https://api.freecurrencyapi.com/v1/latest?apikey=x0fISZ5yVuubfp91QA5YJyisbCvxqKkMMpjkOdkc&base_currency={chosenCurrencyFrom}&currencies={chosenCurrencyTo}");
+        string rate = exchangeRate.ToString();
+        rate = Regex.Split(rate, @"\:")[Regex.Split(rate, @"\:").Length - 1];
+        rate = rate.Substring(0, rate.Length - 2);
+        Console.WriteLine($"-----RESULT-----\n 1 {chosenCurrencyFrom} = {rate} {chosenCurrencyTo}");               
     }
 
     static ConsoleKeyInfo ReadKeyInput() {
