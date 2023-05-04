@@ -24,7 +24,7 @@ public class CurrencyAPI
         HttpResponseMessage response = client.GetAsync(uri).Result;
         response.EnsureSuccessStatusCode();
         string result = response.Content.ReadAsStringAsync().Result;
-        Console.WriteLine("Result: " + result); 
+        //Console.WriteLine("Result: " + result); 
         return result;
     }
 }
