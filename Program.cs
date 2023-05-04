@@ -12,8 +12,10 @@ class Program
         bool invalidInput = false;
         string chosenCurrencyFrom = "";
         string chosenCurrencyTo = "";
+        while (true)
+        {
         do{           
-            Console.WriteLine($"Hello, welcome to David's Currency Converter. \n Please select a currency to convert FROM:\n {options}");
+            Console.WriteLine($"\nHello, welcome to David's Currency Converter. \n Please select a currency to convert FROM:\n {options}");
             
             keyInfo = Console.ReadKey();
             switch(keyInfo.Key) {
@@ -84,12 +86,28 @@ class Program
             }
         }while(!invalidInput);
 
+        if (chosenCurrencyFrom == chosenCurrencyTo){
+            Console.WriteLine($"\nInvalid option. You chose the same currency for FROM and TO ({chosenCurrencyFrom}) \n A currency will always equal itself! 1=1");
+            continue;
+        }
+
         CurrencyAPI api = new CurrencyAPI();
         var exchangeRate = api.Get($"https://api.freecurrencyapi.com/v1/latest?apikey=x0fISZ5yVuubfp91QA5YJyisbCvxqKkMMpjkOdkc&base_currency={chosenCurrencyFrom}&currencies={chosenCurrencyTo}");
         string rate = exchangeRate.ToString();
         rate = Regex.Split(rate, @"\:")[Regex.Split(rate, @"\:").Length - 1];
         rate = rate.Substring(0, rate.Length - 2);
-        Console.WriteLine($"-----RESULT-----\n 1 {chosenCurrencyFrom} = {rate} {chosenCurrencyTo}");               
+        Console.WriteLine($"-----RESULT-----\n 1 {chosenCurrencyFrom} = {rate} {chosenCurrencyTo}");   
+
+        
+            Console.WriteLine("\n Do you want to continue? (Y/N)");
+            var input = Console.ReadKey();
+
+            if (input != null && input.Key != ConsoleKey.Y) //must be Y/y to continue
+            {
+                Console.WriteLine("\nThank you for using David's Currency Converter!\nGoodbye.");
+                break;
+            }            
+        }
     }
 
     static ConsoleKeyInfo ReadKeyInput() {
