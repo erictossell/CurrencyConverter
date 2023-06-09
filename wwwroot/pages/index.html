@@ -42,15 +42,24 @@
         const outputResult = document.getElementById('outputResult');
 
         convertButton.addEventListener('click', () => {
-            // Perform currency conversion logic here
             const amount = parseFloat(inputAmount.value);
             const fromCurrency = inputFrom.value;
             const toCurrency = inputTo.value;
 
-            // Replace the conversion logic with your own implementation
-            const convertedAmount = amount * 1.2; // Example conversion rate
-
-            outputResult.textContent = convertedAmount.toFixed(2); // Display the result
+            // Make an HTTP request to the server-side endpoint
+            fetch(`/convert?amount=${amount}&from=${fromCurrency}&to=${toCurrency}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        outputResult.textContent = data.result.toFixed(2);
+                    } else {
+                        outputResult.textContent = 'Error converting currencies.';
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    outputResult.textContent = 'An error occurred while converting currencies.';
+                });
         });
     </script>
 </body>
