@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Currency Converter</title>
+</head>
+<body>
+    <h1>Currency Converter</h1>
+    
+    <label for="inputAmount">Amount:</label>
+    <input type="text" id="inputAmount" name="amount" />
+
+    <label for="inputFrom">From:</label>
+    <select id="inputFrom" name="from">
+        <option value="usd">CAD</option>
+        <option value="eur">USD</option>
+        <option value="gbp">EUR</option>
+        <option value="eur">GBP</option>
+        <option value="gbp">CNY</option>
+        <!-- Add more options as needed -->
+    </select>
+
+    <label for="inputTo">To:</label>
+    <select id="inputTo" name="to">
+        <option value="usd">CAD</option>
+        <option value="eur">USD</option>
+        <option value="gbp">EUR</option>
+        <option value="eur">GBP</option>
+        <option value="gbp">CNY</option>
+        <!-- Add more options as needed -->
+    </select>
+
+    <button type="button" id="convertButton">Convert</button>
+
+    <label for="outputResult">Result:</label>
+    <span id="outputResult"></span>
+
+    <script>
+        const convertButton = document.getElementById('convertButton');
+        const inputAmount = document.getElementById('inputAmount');
+        const inputFrom = document.getElementById('inputFrom');
+        const inputTo = document.getElementById('inputTo');
+        const outputResult = document.getElementById('outputResult');
+
+        convertButton.addEventListener('click', () => {
+            // Perform currency conversion logic here
+            const amount = parseFloat(inputAmount.value);
+            const fromCurrency = inputFrom.value;
+            const toCurrency = inputTo.value;
+
+            // Replace the conversion logic with your own implementation
+            const convertedAmount = amount * 1.2; // Example conversion rate
+
+            outputResult.textContent = convertedAmount.toFixed(2); // Display the result
+        });
+    </script>
+</body>
+</html>
