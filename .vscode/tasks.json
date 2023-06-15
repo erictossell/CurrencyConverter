@@ -3,7 +3,7 @@
     "tasks": [
         {
             "label": "build",
-            "command": "dotnet build -o ${workspaceRoot}/app/pages",
+            "command": "dotnet build",
             "type": "shell",
             "group": {
                 "kind": "build",
