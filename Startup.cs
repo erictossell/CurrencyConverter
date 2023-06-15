@@ -38,6 +38,7 @@ namespace CurrencyConverter
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllers(); // Add this line to enable routing to your controllers
                 endpoints.MapGet("/", async context =>
                 {
                     await context.Response.SendFileAsync("wwwroot/pages/index.html");

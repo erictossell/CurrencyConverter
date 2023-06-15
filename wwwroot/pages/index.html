@@ -11,21 +11,21 @@
 
     <label for="inputFrom">From:</label>
     <select id="inputFrom" name="from">
-        <option value="usd">CAD</option>
-        <option value="eur">USD</option>
-        <option value="gbp">EUR</option>
-        <option value="eur">GBP</option>
-        <option value="gbp">CNY</option>
+        <option value="CAD">CAD</option>
+        <option value="USD">USD</option>
+        <option value="EUR">EUR</option>
+        <option value="GBP">GBP</option>
+        <option value="CNY">CNY</option>
         <!-- Add more options as needed -->
     </select>
 
     <label for="inputTo">To:</label>
     <select id="inputTo" name="to">
-        <option value="usd">CAD</option>
-        <option value="eur">USD</option>
-        <option value="gbp">EUR</option>
-        <option value="eur">GBP</option>
-        <option value="gbp">CNY</option>
+        <option value="CAD">CAD</option>
+        <option value="USD">USD</option>
+        <option value="EUR">EUR</option>
+        <option value="GBP">GBP</option>
+        <option value="CNY">CNY</option>
         <!-- Add more options as needed -->
     </select>
 
@@ -47,18 +47,16 @@
             const toCurrency = inputTo.value;
 
             // Make an HTTP request to the server-side endpoint
-            fetch(`/convert?amount=${amount}&from=${fromCurrency}&to=${toCurrency}`)
+            fetch(`/api/convert?amount=${amount}&from=${fromCurrency}&to=${toCurrency}`)
                 .then(response => response.json())
                 .then(data => {
-                    if (data.success) {
-                        outputResult.textContent = data.result.toFixed(2);
-                    } else {
-                        outputResult.textContent = 'Error converting currencies.';
-                    }
+                    console.log(data); // Log the response data
+                    document.getElementById('outputResult').innerText = `Converted Amount: ${data.result}`;
+                    // Process the response data here
                 })
                 .catch(error => {
-                    console.error(error);
-                    outputResult.textContent = 'An error occurred while converting currencies.';
+                    console.error(error); // Log any errors
+                    // Handle any errors
                 });
         });
     </script>
