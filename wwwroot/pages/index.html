@@ -128,7 +128,7 @@ button[type="button"]:hover {
             const toCurrency = inputTo.value;
 
             // Make an HTTP request to the server-side endpoint
-            fetch(`/api/convert?amount=${amount}&from=${fromCurrency}&to=${toCurrency}`)
+            fetch(`app/api/convert?amount=${amount}&from=${fromCurrency}&to=${toCurrency}`)
                 .then(response => response.json())
                 .then(data => {
                     console.log(data); // Log the response data

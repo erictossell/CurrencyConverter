@@ -6,7 +6,7 @@ using CurrencyConverter.Helpers;
 namespace CurrencyConverter.Controllers
 {
     [ApiController]
-    [Route("/api/convert")]
+    [Route("app/api/convert")]
     public class ConvertController : ControllerBase
     {
         [HttpGet]
