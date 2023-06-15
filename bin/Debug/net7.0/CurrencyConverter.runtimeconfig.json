@@ -10,6 +10,10 @@
         "name": "Microsoft.AspNetCore.App",
         "version": "7.0.0"
       }
-    ]
+    ],
+    "configProperties": {
+      "System.Globalization.Invariant": true,
+      "System.Globalization.PredefinedCulturesOnly": true
+    }
   }
 }

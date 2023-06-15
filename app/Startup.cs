@@ -31,17 +31,14 @@ namespace CurrencyConverter
 
             app.UseRouting();
 
-            // Example: Adding authentication middleware
-            // app.UseAuthentication();
-
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers(); // Add this line to enable routing to your controllers
+                endpoints.MapControllers();
                 endpoints.MapGet("/", async context =>
                 {
-                    await context.Response.SendFileAsync("wwwroot/pages/index.html");
+                    await context.Response.SendFileAsync("app/index.html");
                 });
             });
         }

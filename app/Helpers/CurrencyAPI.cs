@@ -26,7 +26,6 @@ namespace CurrencyConverter.Helpers
             Console.WriteLine(response.Content.ReadAsStringAsync().Result);
             response.EnsureSuccessStatusCode();
             string result = response.Content.ReadAsStringAsync().Result;
-            //Console.WriteLine("Result: " + result); 
             return result;
         }
 
