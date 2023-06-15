@@ -1,9 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
+using System.Text.RegularExpressions;
+using CurrencyConverter.Helpers;
+
 
 namespace CurrencyConverter.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("/api/convert")]
     public class ConvertController : ControllerBase
     {
         [HttpGet]
@@ -27,37 +30,20 @@ namespace CurrencyConverter.Controllers
     {
         public static decimal Convert(decimal amount, string from, string to)
         {
-            // Implement your existing C# logic for currency conversion here
-            // Return the converted amount or decimal.MinValue if the conversion is invalid
-            // Example implementation:
-            if (from == "usd" && to == "eur")
-            {
-                return amount * 0.85m;
+            CurrencyAPI api = new CurrencyAPI();
+            var exchangeRate = api.Get($"https://api.freecurrencyapi.com/v1/latest?apikey=x0fISZ5yVuubfp91QA5YJyisbCvxqKkMMpjkOdkc&base_currency={from.ToUpper()}&currencies={to.ToUpper()}");
+            string rate = exchangeRate.ToString();
+            rate = Regex.Split(rate, @"\:")[Regex.Split(rate, @"\:").Length - 1];
+            Match match = Regex.Match(rate, @"[0-9\.]+");
+            Console.WriteLine(match.Success.ToString() ?? "FAIL");
+            Console.WriteLine(match.Value.ToString() ?? "EMPTY");
+            decimal conv = 0;
+            if(match.Success && match.Value != null){
+                decimal.TryParse(match.Value, out conv);
             }
-            else if (from == "usd" && to == "gbp")
-            {
-                return amount * 0.72m;
-            }
-            else if (from == "eur" && to == "usd")
-            {
-                return amount * 1.18m;
-            }
-            else if (from == "eur" && to == "gbp")
-            {
-                return amount * 0.85m;
-            }
-            else if (from == "gbp" && to == "usd")
-            {
-                return amount * 1.39m;
-            }
-            else if (from == "gbp" && to == "eur")
-            {
-                return amount * 1.18m;
-            }
-            else
-            {
-                return decimal.MinValue; // Invalid conversion
-            }
+            conv = conv * amount;
+           
+            return conv;
         }
     }
 }
