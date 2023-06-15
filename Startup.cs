@@ -38,7 +38,7 @@ namespace CurrencyConverter
                 endpoints.MapControllers();
                 endpoints.MapGet("/", async context =>
                 {
-                    await context.Response.SendFileAsync("app/index.html");
+                    await context.Response.SendFileAsync("wwwroot/index.html");
                 });
             });
         }
