@@ -29,5 +29,32 @@ namespace CurrencyConverter.Helpers
             //Console.WriteLine("Result: " + result); 
             return result;
         }
+
+        public string GetSymbol(string currency)
+        {
+            string symbol = "";
+            switch (currency)
+                {
+                    case "CAD":
+                        symbol = "$";
+                        break;
+                    case "USD":
+                        symbol = "$";
+                        break;
+                    case "GBP":
+                        symbol = "£";
+                        break;
+                    case "EUR":
+                        symbol = "€";
+                        break;
+                    case "CNY":
+                        symbol = "¥";
+                        break;
+                    default:
+                        symbol = "$";
+                        break;
+                }
+            return symbol;
+        }
     }
 }

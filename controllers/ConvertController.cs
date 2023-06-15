@@ -13,9 +13,8 @@ namespace CurrencyConverter.Controllers
         public IActionResult Get(decimal amount, string from, string to)
         {
             // Replace this with your existing C# logic for currency conversion
-            decimal convertedAmount = CurrencyConverter.Convert(amount, from, to);
-
-            if (convertedAmount != decimal.MinValue)
+            string convertedAmount = CurrencyConverter.Convert(amount, from, to);
+            if (convertedAmount != "")
             {
                 return Ok(new { success = true, result = convertedAmount });
             }
@@ -28,7 +27,7 @@ namespace CurrencyConverter.Controllers
 
     public static class CurrencyConverter
     {
-        public static decimal Convert(decimal amount, string from, string to)
+        public static string Convert(decimal amount, string from, string to)
         {
             CurrencyAPI api = new CurrencyAPI();
             var exchangeRate = api.Get($"https://api.freecurrencyapi.com/v1/latest?apikey=x0fISZ5yVuubfp91QA5YJyisbCvxqKkMMpjkOdkc&base_currency={from.ToUpper()}&currencies={to.ToUpper()}");
@@ -42,8 +41,10 @@ namespace CurrencyConverter.Controllers
                 decimal.TryParse(match.Value, out conv);
             }
             conv = conv * amount;
-           
-            return conv;
+
+            string output = api.GetSymbol(to) + conv.ToString();
+            return output;
         }
+        
     }
 }
