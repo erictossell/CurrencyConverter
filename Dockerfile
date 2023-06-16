@@ -1,17 +1,15 @@
-# Base image with the .NET Core runtime
-FROM mcr.microsoft.com/dotnet/runtime:5.0
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
+WORKDIR /App
 
-# Set the working directory in the container
-WORKDIR /app
-
-# Copy the application code into the container
-COPY . .
-
-# Restore dependencies
+# Copy everything
+COPY . ./
+# Restore as distinct layers
 RUN dotnet restore
+# Build and publish a release
+RUN dotnet publish -c Release -o out
 
-# Build the application
-RUN dotnet build --configuration Release
-
-# Set the command to run the application
-CMD ["dotnet", "run", "--configuration", "Release"]
+# Build runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:7.0
+WORKDIR /App
+COPY --from=build-env /App/out .
+ENTRYPOINT ["dotnet", "CurrencyConverter.dll"]
