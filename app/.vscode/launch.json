@@ -6,7 +6,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/build/CurrencyConverter.dll",
+            "program": "${workspaceFolder}/bin/debug/net6.0/CurrencyConverter.dll",
             "args": [],
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",

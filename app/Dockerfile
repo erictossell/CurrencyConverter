@@ -3,13 +3,13 @@
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /build
 
-# copy csproj and restore as distinct layers
-COPY *.csproj /build
-RUN dotnet restore 
+# Copy csproj and restore as distinct layers
+COPY *.csproj .
+RUN dotnet restore
 
-# copy everything else and build app
-COPY . /build
-RUN dotnet publish -c Release -o publish 
+# Copy everything else and build the app
+COPY . .
+RUN dotnet publish -c Release -o /build/publish
 
 # Add the necessary .NET runtime files
 RUN apt-get update \
@@ -18,8 +18,8 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 
-# final stage/image
+# Final stage/image
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
-WORKDIR /build
-COPY --from=build /build .
+WORKDIR /app/bin/debug/net6.0
+COPY --from=build /build/publish .
 ENTRYPOINT ["dotnet", "CurrencyConverter.dll"]
