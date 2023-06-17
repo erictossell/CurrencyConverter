@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Currency Converter</title>
+    <link rel="stylesheet" type="text/css" href="styles.css"/>
+    <link id="Link1" rel="icon" href="/images/favicon.ico" type="image/png" />
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+    <h1>Currency Converter</h1>
+    <span class="card">
+        <label for="inputAmount">Amount:</label>
+        <input type="text" id="inputAmount" name="amount" placeholder ="00.00" oninput="formatDecimal(this)"/>
+        
+        <label for="inputFrom">From:</label>
+        <select id="inputFrom" name="from">
+            <option value="CAD" selected="selected">CAD</option>
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="GBP">GBP</option>
+            <option value="CNY">CNY</option>
+            <!-- Add more options as needed -->
+        </select>
+
+        <label for="inputTo">To:</label>
+        <select id="inputTo" name="to">
+            <option value="CAD">CAD</option>
+            <option value="USD" selected="selected">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="GBP">GBP</option>
+            <option value="CNY">CNY</option>
+            <!-- Add more options as needed -->
+        </select>
+
+        <button type="button" id="convertButton">Convert</button>
+
+        <label for="outputResult">Result:</label>
+        <span id="outputResult" class="result" ></span>
+        <hr>
+        <p id ="convHistLabel">Conversion History</p>
+        <table id ="conversionHistory">
+            <thead>
+             <tr>
+                <th>Amount</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Result</th>
+             </tr>
+           </thead>
+            <tbody>
+            </tbody>
+        </table>
+        
+    </span>
+
+    <br>
+    </div>
+    <footer>       
+        <p>Written in C# and .NET by David Wagner - 2023<br><br>
+          <a href="https://github.com/devdavidwagner/CurrencyConverter">
+            <img src="/images/GitHub-Mark.png" alt="GitHub" width="20" height="20" style="vertical-align: middle;">
+            Github Repository
+          </a>
+          <a href="https://www.linkedin.com/in/david-karl-wagner/">
+            <img src="/images/LinkedIn-Mark.png" alt="GitHub" width="20" height="20" style="vertical-align: middle; padding-left:25px;">
+            LinkedIn
+          </a>
+        </p>
+        <p>Exchange Rates pulled from <a href="https://freecurrencyapi.com/">Free Currency API</a></p>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="script.js"></script> 
+</body>
+</html>
