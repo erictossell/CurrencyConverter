@@ -9,7 +9,7 @@ RUN dotnet restore
 
 # Copy everything else and build the app
 COPY . .
-RUN dotnet publish -c Release -o /build/publish
+RUN dotnet publish -c Release -o /app/publish
 
 # Add the necessary .NET runtime files
 RUN apt-get update \
