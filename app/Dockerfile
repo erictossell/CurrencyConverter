@@ -21,5 +21,5 @@ RUN apt-get update \
 # final stage/image
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /build
-COPY --from=build ./build .
+COPY --from=build /build .
 ENTRYPOINT ["dotnet", "CurrencyConverter.dll"]
