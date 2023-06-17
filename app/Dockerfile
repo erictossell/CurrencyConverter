@@ -4,11 +4,11 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /app
 
 # copy csproj and restore as distinct layers
-COPY *.csproj /build
+COPY ./app/*.csproj /build
 RUN dotnet restore 
 
 # copy everything else and build app
-COPY . /build
+COPY ./app/. /build
 RUN dotnet publish -c Release -o publish 
 
 # Add the necessary .NET runtime files
@@ -21,5 +21,5 @@ RUN apt-get update \
 # final stage/image
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /build
-COPY --from=build /build .
+COPY --from=app ./build .
 ENTRYPOINT ["dotnet", "CurrencyConverter.dll"]
