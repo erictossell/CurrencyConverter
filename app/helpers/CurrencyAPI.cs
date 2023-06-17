@@ -29,7 +29,7 @@ namespace CurrencyConverter.Helpers
             return result;
         }
 
-        public string GetSymbol(string currency)
+        public static string GetSymbol(string currency)
         {
             string symbol = "";
             switch (currency)
