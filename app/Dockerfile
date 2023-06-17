@@ -22,4 +22,4 @@ RUN apt-get update \
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /app
 COPY --from=build /app .
-ENTRYPOINT ["dotnet", "CurrencyConverter.dll"]
+ENTRYPOINT ["dotnet", "bin/debug/net6.0/CurrencyConverter.dll"]
