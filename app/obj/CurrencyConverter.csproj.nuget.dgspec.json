@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\David\\Programming\\CurrencyConverter\\CurrencyConverter.csproj": {}
+    "C:\\Users\\David\\Programming\\CurrencyConverter\\app\\CurrencyConverter.csproj": {}
   },
   "projects": {
-    "C:\\Users\\David\\Programming\\CurrencyConverter\\CurrencyConverter.csproj": {
+    "C:\\Users\\David\\Programming\\CurrencyConverter\\app\\CurrencyConverter.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\David\\Programming\\CurrencyConverter\\CurrencyConverter.csproj",
+        "projectUniqueName": "C:\\Users\\David\\Programming\\CurrencyConverter\\app\\CurrencyConverter.csproj",
         "projectName": "CurrencyConverter",
-        "projectPath": "C:\\Users\\David\\Programming\\CurrencyConverter\\CurrencyConverter.csproj",
+        "projectPath": "C:\\Users\\David\\Programming\\CurrencyConverter\\app\\CurrencyConverter.csproj",
         "packagesPath": "C:\\Users\\David\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\David\\Programming\\CurrencyConverter\\obj\\",
+        "outputPath": "C:\\Users\\David\\Programming\\CurrencyConverter\\app\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\David\\AppData\\Roaming\\NuGet\\NuGet.Config",

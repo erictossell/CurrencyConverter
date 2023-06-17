@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "zJaYbTVSIPjApnJxqz20Zj3DO6ADk+jEzv5yBo6ZFgywBCNcKmCWkwjjuBfYM6E/cpGS2nI1PsTBSVIRth4rmA==",
+  "dgSpecHash": "B8dzBl89xOc8aNIFMyZ8IevG6sS7hwqLHbulKkD7e1VNvEI+J4+fd/CgFli0JBdE8deAmlJEB+76o26PO0AWoA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\David\\Programming\\CurrencyConverter\\CurrencyConverter.csproj",
+  "projectFilePath": "C:\\Users\\David\\Programming\\CurrencyConverter\\app\\CurrencyConverter.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\David\\.nuget\\packages\\htmlagilitypack\\1.11.46\\htmlagilitypack.1.11.46.nupkg.sha512",
     "C:\\Users\\David\\.nuget\\packages\\microsoft.aspnet.webapi.client\\5.2.9\\microsoft.aspnet.webapi.client.5.2.9.nupkg.sha512",
