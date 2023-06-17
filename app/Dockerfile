@@ -11,7 +11,13 @@ RUN dotnet restore
 COPY . .
 RUN dotnet publish -c Release -o publish 
 
+# Add the necessary .NET runtime files
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        libc6 \
+    && rm -rf /var/lib/apt/lists/*
 
+    
 # final stage/image
 FROM mcr.microsoft.com/dotnet/aspnet:7.0
 WORKDIR /app
