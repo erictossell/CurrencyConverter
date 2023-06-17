@@ -15,5 +15,5 @@ RUN dotnet publish -c Release -o publish
 # final stage/image
 FROM mcr.microsoft.com/dotnet/aspnet:7.0
 WORKDIR /app
-COPY --from=build /source/bin/Debug/net6.0/ /app
+COPY --from=build /app/bin/Debug/net6.0/ /app
 ENTRYPOINT ["dotnet", "CurrencyConverter.dll"]
