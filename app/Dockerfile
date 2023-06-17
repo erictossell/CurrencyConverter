@@ -4,8 +4,7 @@ FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /app
 
 # copy csproj and restore as distinct layers
-COPY *.sln .
-COPY *.csproj .
+COPY CurrencyConverter.csproj .
 RUN dotnet restore 
 
 # copy everything else and build app
