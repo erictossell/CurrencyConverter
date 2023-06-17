@@ -1,30 +1,44 @@
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using CurrencyConverter.Helpers;
 
-
-namespace app.controllers
+namespace CurrencyConverter.Controllers
 {
     [Route("/convertHistory")]
-    public class ConvertController : ControllerBase
+    public class ConvertHistoryController : ControllerBase
     {
         [HttpGet]
-        public IActionResult Get(decimal? amount, string from, string to, string result)
+        public IActionResult Get(decimal? amount, string from, string to, string result, bool addRow)
         {    
-            decimal nonNullAmt = amount ?? 0;
+            string nonNullAmt = amount.ToString() ?? "00.00";
+            nonNullAmt = CurrencyAPI.GetSymbol(from) + nonNullAmt;
             string cookieValue = Request.Cookies["ConversionHistory"] ?? "";
-            string[] values = {nonNullAmt.ToString(), from, to, result };
+            string[] values = { nonNullAmt, from, to, result };
           
             if (string.IsNullOrEmpty(cookieValue))
             {
-                values = new[] {nonNullAmt.ToString(), from, to, result };
+                values = new[] {nonNullAmt, from, to, result };
             }
             else{
                 string[] previousValues = cookieValue.Split(',');
-                values = previousValues.Concat(new[] { nonNullAmt.ToString(), from, to, result }).ToArray();
+                if(addRow){
+                    values = previousValues.Concat(new[] { nonNullAmt, from, to, result }).ToArray();
+                }
+                else{
+                    values = previousValues.ToArray();
+                }
+               
             }
+             
             string joinedString = string.Join(",", values);
-            Response.Cookies.Append("ConversionHistory", joinedString);
+            if(addRow){
+                Response.Cookies.Append("ConversionHistory", joinedString);
+            }
+            
+            if(cookieValue == ""){
+                joinedString = cookieValue;
+            }
             // Continue with your logic
             return Ok(new { success = true, result = joinedString });
         }

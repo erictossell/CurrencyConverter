@@ -4,6 +4,8 @@ const inputFrom = document.getElementById('inputFrom');
 const inputTo = document.getElementById('inputTo');
 const outputResult = document.getElementById('outputResult');
 
+document.addEventListener('DOMContentLoaded', saveConversionHistory(null, "", "", 0, false));
+
 convertButton.addEventListener('click', () => {
     var amount = parseFloat(inputAmount.value);
     const fromCurrency = inputFrom.value;
@@ -35,7 +37,7 @@ convertButton.addEventListener('click', () => {
             .then(data => {
                     console.log(data); 
                     document.getElementById('outputResult').innerText = `${data.result}`;
-                    saveConversionHistory(amount, toCurrency, fromCurrency, data.result)               
+                    saveConversionHistory(amount, toCurrency, fromCurrency, data.result, true)               
             })
             .catch(error => {
                 console.error(error); // Log any errors
@@ -59,66 +61,67 @@ function formatDecimal(input) {
     }
 }
 
-function saveConversionHistory(amount, from, to, result) {
-
-    // Create an object with the conversion data
-    var conversionData = {
-        amount: amount,
-        from: from,
-        to: to,
-        result: result
-    };
-
-    var responseRetrieved = false;
+function saveConversionHistory(amount, from, to, result, addRow) {
     var responseData = "";
 
     // Send a POST request to the controller endpoint
-    fetch('/convertHistory', {
-        method: 'POST',
-        headers: {
-        'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(conversionData)
-    })
-    .then(response => {
-        // Handle the response from the server
-        if (response.ok) {
+    fetch(`/convertHistory?amount=${amount}&from=${from}&to=${to}&result=${result}&addRow=${addRow}`) 
+    .then(response => response.json())
+    .then(data => {
             // Conversion saved successfully
             console.log('Conversion saved');
-            responseData = response;
-            responseRetrieved = true;
-        } else {
-        // Error saving conversion
-        console.error('Error saving conversion');
-        }
+            responseData = data.result;   
+            console.log(responseData)
+            if (responseData.includes(",")) {
+                var historyTable = document.getElementById('conversionHistory').getElementsByTagName('tbody')[0];
+                historyTable.innerHTML = '';
+                var cells = responseData.split(",");         
+                var newContent = cells.slice(cells.length - 4, cells.length).join('</td><td>');
+                newContent = "<td>" + newContent + "</td>";
+                for (let i = 4; i <= cells.length; i += 4) {
+               
+                    var newRow = historyTable.insertRow(historyTable.rows.length);
+
+                    for (let j = i - 4; j < i; j++) {
+                        var newCell = newRow.insertCell();
+                        newCell.innerText = cells[j];
+                    }
+
+                    // Check if the tbody already contains a duplicate row
+                    var isDuplicate = false;
+                    for (var j = 0; j < historyTable.rows.length; j++) {
+                        var row = historyTable.rows[j];
+                        var rowContent = row.innerHTML;
+                        console.log(rowContent);
+                        console.log(newContent);
+                        // Compare the row content with the new content
+                        if (rowContent === newContent) {
+                            isDuplicate = true;
+                            break;
+                        }
+                    }
+
+                    if(historyTable.rows.length == 0){
+                        var newRow = historyTable.insertRow(historyTable.rows.length);
+                        newRow.innerHTML = newContent;
+                    }             
+                    // Add the new row if it's not a duplicate
+                    else if (!isDuplicate) {
+                        var newRow = historyTable.insertRow(historyTable.rows.length);
+                        newRow.innerHTML = newContent;
+                    }
+                }
+              }
+              
     })
     .catch(error => {
         // Error making the request
         console.error('Request error:', error);
     });
 
-    if(responseRetrieved){
-        var historyTable = document.getElementById('conversionHistory');
-    
-        // Create a new row
-        var newRow = historyTable.insertRow();
-        
-        // Create cells for each column
-        var amountCell = newRow.insertCell();
-        var fromCell = newRow.insertCell();
-        var toCell = newRow.insertCell();
-        var resultCell = newRow.insertCell();
-        
-        // Set the content of each cell
-        amountCell.textContent = amount;
-        fromCell.textContent = from;
-        toCell.textContent = to;
-        resultCell.textContent = result;
-    
-        // Append the new row to the table
-        historyTable.appendChild(newRow);
-    }
+ 
 
   
 }
     
+function fetchRows(){}
