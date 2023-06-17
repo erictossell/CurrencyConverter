@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Currency Converter</title>
+    <style type = "text/css">
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+h1 {
+    background-color: #4CAF50;
+    color: white;
+    margin: 0;
+    padding: 20px;
+    text-align: center;
+}
+p {
+    background-color: #4CAF50;
+    color: white;
+    margin: 0;
+    padding: 10px;
+    text-align: center;
+}
+
+.card {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 20px;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+
+.card2{
+    display: inline-block;
+    margin-top: 20px;
+    padding: 20px;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+label {
+    display: block;
+    margin: 10px;
+}
+
+input[type="text"], select {
+    display: block;
+    margin: 10px auto;
+    padding: 12px 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+button[type="button"] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 10px auto;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button[type="button"]:hover {
+    background-color: #45a049;
+}
+
+.result {
+    display:block; 
+    font-size:24px; 
+    font-style: bold;
+}
+    </style>
+</head>
+<body>
+    <h1>Currency Converter</h1>
+    <p>Exchange Rates pulled from <a href="https://freecurrencyapi.com/">Free Currency API</a></p>
+    <span class="card">
+        <label for="inputAmount">Amount:</label>
+        <input type="text" id="inputAmount" name="amount" />
+        
+        <label for="inputFrom">From:</label>
+        <select id="inputFrom" name="from">
+            <option value="CAD">CAD</option>
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="GBP">GBP</option>
+            <option value="CNY">CNY</option>
+            <!-- Add more options as needed -->
+        </select>
+
+        <label for="inputTo">To:</label>
+        <select id="inputTo" name="to">
+            <option value="CAD">CAD</option>
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="GBP">GBP</option>
+            <option value="CNY">CNY</option>
+            <!-- Add more options as needed -->
+        </select>
+
+        <button type="button" id="convertButton">Convert</button>
+
+        <label for="outputResult">Result:</label>
+        <span id="outputResult" class="result"></span>
+        
+    </span>
+    <br>
+    <span class="card2">
+    <p>Written in C# and .NET by David Wagner - 2023<br><br> <a href="https://github.com/devdavidwagner/CurrencyConverter">Github Repository</a></p>
+    </span>
+
+    <script>
+        const convertButton = document.getElementById('convertButton');
+        const inputAmount = document.getElementById('inputAmount');
+        const inputFrom = document.getElementById('inputFrom');
+        const inputTo = document.getElementById('inputTo');
+        const outputResult = document.getElementById('outputResult');
+
+        convertButton.addEventListener('click', () => {
+            const amount = parseFloat(inputAmount.value);
+            const fromCurrency = inputFrom.value;
+            const toCurrency = inputTo.value;
+
+            // Make an HTTP request to the server-side endpoint
+            fetch(`/api/convert?amount=${amount}&from=${fromCurrency}&to=${toCurrency}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data); // Log the response data
+                    document.getElementById('outputResult').innerText = `${data.result}`;
+                    // Process the response data here
+                })
+                .catch(error => {
+                    console.error(error); // Log any errors
+                    // Handle any errors
+                });
+        });
+    </script>
+</body>
+</html>
