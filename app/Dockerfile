@@ -1,3 +1,5 @@
+# Learn about building .NET container images:
+# https://github.com/dotnet/dotnet-docker/blob/main/samples/README.md
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /build
 
@@ -18,6 +20,6 @@ RUN apt-get update \
 
 # Final stage/image
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
-WORKDIR /app
+WORKDIR /app/bin/debug/net6.0
 COPY --from=build /build/publish .
 ENTRYPOINT ["dotnet", "CurrencyConverter.dll"]
