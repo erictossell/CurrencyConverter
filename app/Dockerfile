@@ -12,6 +12,6 @@ RUN dotnet publish -c Release -o /app/publish
 
 # Use the appropriate runtime image for your application
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
-WORKDIR /app
+WORKDIR /app/publish
 COPY --from=build /app/publish .
 ENTRYPOINT ["dotnet", "CurrencyConverter.dll"]
