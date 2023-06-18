@@ -2,10 +2,10 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /app
 
 # Copy the entire project directory
-COPY . .
+COPY . /app/publish
 
 # Restore, build, and publish the app
-RUN dotnet restore CurrencyConverter.csproj
+RUN dotnet restore
 RUN dotnet publish -c Release -o /app/publish
 
 # Add the necessary .NET runtime files
