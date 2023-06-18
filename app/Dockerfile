@@ -1,21 +1,14 @@
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+# syntax=docker/dockerfile:1
+
+FROM mcr.microsoft.com/dotnet/sdk:6.0 as build-env
 WORKDIR /app
-
-# Copy the entire project directory
-COPY . /app/publish
-
-# Restore, build, and publish the app
+COPY app/*.csproj .
 RUN dotnet restore
-RUN dotnet publish -c Release -o /app/publish
+COPY app .
+RUN dotnet publish -c Release -o /publish
 
-# Add the necessary .NET runtime files
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        libc6 \
-    && rm -rf /var/lib/apt/lists/*
-
-# Final stage/image
-FROM mcr.microsoft.com/dotnet/aspnet:6.0
-WORKDIR /app
-COPY --from=build /app/publish .
-ENTRYPOINT ["dotnet", "CurrencyConverter.dll"]
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 as runtime
+WORKDIR /publish
+COPY --from=build-env /publish .
+EXPOSE 80
+ENTRYPOINT ["dotnet", "myWebApp.dll"]
