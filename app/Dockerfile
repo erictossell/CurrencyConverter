@@ -4,6 +4,7 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /app
 
 # Copy everything else and build the app
+COPY CurrencyConverter.csproj /app/publish
 COPY . /app/publish
 RUN dotnet publish -c Release -o /app/publish
 
