@@ -25,7 +25,22 @@ namespace CurrencyConverter.Controllers
             }
             else{
                 string[] previousValues = cookieValue.Split(',');
-                if(addRow){
+
+                if(previousValues.Length >= 20 && addRow){
+                    int insertInd = previousValues.Length - 4;
+                    // Shift the elements up by four positions
+                    for (int i = 0; i < insertInd; i++)
+                    {
+                        previousValues[i] = previousValues[i + 4];
+                    }
+                    
+                    previousValues[insertInd] = nonNullAmt;
+                    previousValues[insertInd + 1] = from;
+                    previousValues[insertInd + 2] = to;
+                    previousValues[insertInd + 3] = result;
+                    values = previousValues;
+                }
+                else if(addRow){
                     values = previousValues.Concat(new[] { nonNullAmt, from, to, result }).ToArray();
                 }
                 else{

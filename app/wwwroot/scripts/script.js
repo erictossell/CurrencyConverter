@@ -37,7 +37,7 @@ convertButton.addEventListener('click', () => {
             .then(data => {
                     console.log(data); 
                     document.getElementById('outputResult').innerText = `${data.result}`;
-                    saveConversionHistory(amount, toCurrency, fromCurrency, data.result, true)              
+                    saveConversionHistory(amount, fromCurrency, toCurrency, data.result, true)              
             })
             .catch(error => {
                 console.error(error); // Log any errors
@@ -63,7 +63,7 @@ function formatDecimal(input) {
 
 function saveConversionHistory(amount, from, to, result, addRow) {
     var responseData = "";
-
+    const maxConversions = 5;
     // Send a POST request to the controller endpoint
     if(result == "0"){result = "";}
     fetch(`/convertHistory?amount=${amount}&from=${from}&to=${to}&result=${result}&addRow=${addRow}`) 
@@ -74,23 +74,23 @@ function saveConversionHistory(amount, from, to, result, addRow) {
         console.log('Conversion saved');
         responseData = data.result;   
         console.log(responseData)
-            var historyTable = document.getElementById('conversionHistory').getElementsByTagName('tbody')[0];
-            historyTable.innerHTML = '';
-            var cells = responseData.split(",");         
-            var newContent = cells.slice(cells.length - 4, cells.length).join('</td><td>');
-            newContent = "<td>" + newContent + "</td>";
-            for (let i = 4; i <= cells.length; i += 4) {
-            
-                var newRow = historyTable.insertRow(historyTable.rows.length);
-
-                for (let j = i - 4; j < i; j++) {
-                    var newCell = newRow.insertCell();
-                    newCell.innerText = cells[j];
-                }                  
-
-            
-            }
-              
+        var historyTable = document.getElementById('conversionHistory').getElementsByTagName('tbody')[0];
+        historyTable.innerHTML = '';
+        var cells = responseData.split(",");     
+        
+        var newContent = cells.slice(cells.length - 4, cells.length).join('</td><td>');
+        newContent = "<td>" + newContent + "</td>";
+        console.log('cell length: ' + cells.length);
+        
+        for (let i = 4; i <= cells.length; i += 4) {
+            var newRowIndex = 0;        
+            var newRow = historyTable.insertRow(historyTable.rows.length);
+            for (let j = i - 4; j < i; j++) {
+                var newCell = newRow.insertCell();
+                newCell.innerText = cells[j];
+            }                          
+        }
+                     
     })
     .catch(error => {
         // Error making the request

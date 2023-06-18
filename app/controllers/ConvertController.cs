@@ -13,7 +13,7 @@ namespace CurrencyConverter.Controllers
         public IActionResult Get(decimal? amount, string from, string to)
         {
             if(amount.HasValue && amount.Value == 0){
-                string symbol = CurrencyAPI.GetSymbol(to);
+                string symbol = CurrencyAPI.GetSymbol(from);
                 string result = symbol + amount.ToString();
                 return Ok(new { success = true, result = result });
             }
