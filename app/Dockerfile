@@ -7,6 +7,7 @@ COPY CurrencyConverter.csproj .
 RUN dotnet restore
 
 # Copy everything else and build the app
+COPY wwwroot ./wwwroot
 COPY . .
 RUN dotnet publish -c Release -o /build/publish
 
