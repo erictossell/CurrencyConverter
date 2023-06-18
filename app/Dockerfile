@@ -6,7 +6,7 @@ COPY CurrencyConverter.csproj .
 RUN dotnet restore
 
 # Copy everything else and build the app
-COPY . .
+COPY --exclude bin/ --exclude obj/ . .
 RUN dotnet publish -c Release -o /build/publish
 
 # Add the necessary .NET runtime files
