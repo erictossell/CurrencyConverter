@@ -37,7 +37,7 @@ convertButton.addEventListener('click', () => {
             .then(data => {
                     console.log(data); 
                     document.getElementById('outputResult').innerText = `${data.result}`;
-                    saveConversionHistory(amount, toCurrency, fromCurrency, data.result, true)               
+                    saveConversionHistory(amount, toCurrency, fromCurrency, data.result, true)              
             })
             .catch(error => {
                 console.error(error); // Log any errors
@@ -65,63 +65,36 @@ function saveConversionHistory(amount, from, to, result, addRow) {
     var responseData = "";
 
     // Send a POST request to the controller endpoint
+    if(result == "0"){result = "";}
     fetch(`/convertHistory?amount=${amount}&from=${from}&to=${to}&result=${result}&addRow=${addRow}`) 
     .then(response => response.json())
     .then(data => {
-            // Conversion saved successfully
-            console.log('Conversion saved');
-            responseData = data.result;   
-            console.log(responseData)
-            if (responseData.includes(",")) {
-                var historyTable = document.getElementById('conversionHistory').getElementsByTagName('tbody')[0];
-                historyTable.innerHTML = '';
-                var cells = responseData.split(",");         
-                var newContent = cells.slice(cells.length - 4, cells.length).join('</td><td>');
-                newContent = "<td>" + newContent + "</td>";
-                for (let i = 4; i <= cells.length; i += 4) {
-               
-                    var newRow = historyTable.insertRow(historyTable.rows.length);
+        console.log(data.toString());
+        // Conversion saved successfully
+        console.log('Conversion saved');
+        responseData = data.result;   
+        console.log(responseData)
+            var historyTable = document.getElementById('conversionHistory').getElementsByTagName('tbody')[0];
+            historyTable.innerHTML = '';
+            var cells = responseData.split(",");         
+            var newContent = cells.slice(cells.length - 4, cells.length).join('</td><td>');
+            newContent = "<td>" + newContent + "</td>";
+            for (let i = 4; i <= cells.length; i += 4) {
+            
+                var newRow = historyTable.insertRow(historyTable.rows.length);
 
-                    for (let j = i - 4; j < i; j++) {
-                        var newCell = newRow.insertCell();
-                        newCell.innerText = cells[j];
-                    }
+                for (let j = i - 4; j < i; j++) {
+                    var newCell = newRow.insertCell();
+                    newCell.innerText = cells[j];
+                }                  
 
-                    // Check if the tbody already contains a duplicate row
-                    var isDuplicate = false;
-                    for (var j = 0; j < historyTable.rows.length; j++) {
-                        var row = historyTable.rows[j];
-                        var rowContent = row.innerHTML;
-                        console.log(rowContent);
-                        console.log(newContent);
-                        // Compare the row content with the new content
-                        if (rowContent === newContent) {
-                            isDuplicate = true;
-                            break;
-                        }
-                    }
-
-                    if(historyTable.rows.length == 0){
-                        var newRow = historyTable.insertRow(historyTable.rows.length);
-                        newRow.innerHTML = newContent;
-                    }             
-                    // Add the new row if it's not a duplicate
-                    else if (!isDuplicate) {
-                        var newRow = historyTable.insertRow(historyTable.rows.length);
-                        newRow.innerHTML = newContent;
-                    }
-                }
-              }
+            
+            }
               
     })
     .catch(error => {
         // Error making the request
         console.error('Request error:', error);
     });
-
- 
-
-  
 }
-    
-function fetchRows(){}
+

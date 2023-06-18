@@ -12,7 +12,10 @@ namespace CurrencyConverter.Controllers
         public IActionResult Get(decimal? amount, string from, string to, string result, bool addRow)
         {    
             string nonNullAmt = amount.ToString() ?? "00.00";
-            nonNullAmt = CurrencyAPI.GetSymbol(from) + nonNullAmt;
+            if(nonNullAmt != ""){
+                    nonNullAmt = CurrencyAPI.GetSymbol(from) + nonNullAmt;
+            }
+        
             string cookieValue = Request.Cookies["ConversionHistory"] ?? "";
             string[] values = { nonNullAmt, from, to, result };
           
@@ -36,9 +39,9 @@ namespace CurrencyConverter.Controllers
                 Response.Cookies.Append("ConversionHistory", joinedString);
             }
             
-            if(cookieValue == ""){
-                joinedString = cookieValue;
-            }
+            // if(cookieValue == ""){
+            //     joinedString = cookieValue;
+            // }
             // Continue with your logic
             return Ok(new { success = true, result = joinedString });
         }
