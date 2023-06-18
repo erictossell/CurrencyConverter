@@ -3,12 +3,12 @@
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /app
 # Copy csproj and restore as distinct layers
-COPY CurrencyConverter.csproj .
+COPY CurrencyConverter.csproj /build/publish
 RUN dotnet restore
 
 # Copy everything else and build the app
 COPY wwwroot /build/publish
-COPY . .
+COPY . /build/publish
 RUN dotnet publish -c Release -o /build/publish
 
 # Add the necessary .NET runtime files
