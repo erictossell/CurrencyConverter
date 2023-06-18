@@ -3,7 +3,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 
 # Copy csproj and restore as distinct layers
-COPY *.csproj .
+COPY app/CurrencyConverter.csproj .
 RUN dotnet restore
 
 # Copy everything else and build the app
