@@ -4,8 +4,8 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /app
 
 # Copy everything else and build the app
-COPY . .
-RUN dotnet publish -c Release -o .
+COPY . /app/publish
+RUN dotnet publish -c Release -o /app/publish
 
 # Add the necessary .NET runtime files
 RUN apt-get update \
@@ -17,5 +17,6 @@ RUN apt-get update \
 # Final stage/image
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /app
-COPY --from=build . .
+COPY --from=build /app/publish .
+COPY wwwroot /app/wwwroot
 ENTRYPOINT ["dotnet", "CurrencyConverter.dll"]
