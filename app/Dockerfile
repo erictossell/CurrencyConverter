@@ -5,7 +5,7 @@ WORKDIR /app
 COPY . .
 
 # Restore, build, and publish the app
-RUN dotnet restore
+RUN dotnet restore CurrencyConverter.csproj
 RUN dotnet publish -c Release -o /app/publish
 
 # Add the necessary .NET runtime files
