@@ -1,14 +1,17 @@
-# syntax=docker/dockerfile:1
-
-FROM mcr.microsoft.com/dotnet/sdk:6.0 as build-env
+# Use the desired base image for your application
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /app
-COPY app/*.csproj .
-RUN dotnet restore
-COPY app .
-RUN dotnet publish -c Release -o /publish
 
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 as runtime
-WORKDIR /publish
-COPY --from=build-env /publish .
-EXPOSE 80
+# Copy csproj and restore as distinct layers
+COPY *.csproj ./
+RUN dotnet restore
+
+# Copy everything else and build the app
+COPY . ./
+RUN dotnet publish -c Release -o /app/publish
+
+# Use the appropriate runtime image for your application
+FROM mcr.microsoft.com/dotnet/aspnet:6.0
+WORKDIR /app
+COPY --from=build /app/publish .
 ENTRYPOINT ["dotnet", "CurrencyConverter.dll"]
