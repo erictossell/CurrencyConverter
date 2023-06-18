@@ -1,6 +1,7 @@
 # Learn about building .NET container images:
 # https://github.com/dotnet/dotnet-docker/blob/main/samples/README.md
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+WORKDIR /app
 # Copy csproj and restore as distinct layers
 COPY CurrencyConverter.csproj .
 RUN dotnet restore
