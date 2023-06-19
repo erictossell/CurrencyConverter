@@ -5,6 +5,8 @@ const inputTo = document.getElementById('inputTo');
 const outputResult = document.getElementById('outputResult');
 
 document.addEventListener('DOMContentLoaded', saveConversionHistory(null, "", "", 0, false));
+document.addEventListener('DOMContentLoaded', retrieveRates());
+document.addEventListener('DOMContentLoaded', updateLatestPull());
 
 convertButton.addEventListener('click', () => {
     var amount = parseFloat(inputAmount.value);
@@ -98,3 +100,83 @@ function saveConversionHistory(amount, from, to, result, addRow) {
     });
 }
 
+
+
+function retrieveRates() {
+    const currenciesUsed = ["CAD", "USD", "GBP", "EUR", "CNY"];
+    var responseData = "";
+    const maxConversions = 5;
+
+    var tableBody = document.querySelector("#exchangeRates tbody");
+    tableBody.innerHTML = ""; // Clear existing table body
+
+    currenciesUsed.forEach((fromCurrency) => {
+        var tableRow = document.createElement("tr");
+        var tableHeader = document.createElement("th");
+        tableHeader.textContent = fromCurrency;
+        tableRow.appendChild(tableHeader);
+
+        currenciesUsed.forEach((toCurrency) => {
+            var cookieName = `${fromCurrency}-${toCurrency}`;
+            var cookieValue = getCookie(cookieName);
+            if (cookieValue != null){
+        
+                var tableData = document.createElement("td");
+                tableData.textContent = cookieValue; // Assuming `data.result` contains the exchange rate
+                tableRow.appendChild(tableData);
+            } 
+            else {
+                fetch(`/generateExchangeRates?from=${fromCurrency}&to=${toCurrency}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        setTimeCookie();
+                        console.log(data.toString());
+                        // Conversion saved successfully
+                        console.log(`Exchange rate saved: from=${fromCurrency}&to=${toCurrency} result = ${data.result}`);
+                        
+                        var tableData = document.createElement("td");
+                        tableData.textContent = data.result; // Assuming `data.result` contains the exchange rate
+                        tableRow.appendChild(tableData);
+
+                        var cookieName = `${fromCurrency}-${toCurrency}`;
+                        var cookieValue = data.result;      
+                        document.cookie = `${cookieName}=${cookieValue}; expires=Thu, 1 Jan 2025 12:00:00 UTC; path=/`;
+                    })
+                    .catch(error => {
+                        // Error making the request
+                        console.error('Request error:', error);
+                    });
+            }
+        });
+        
+
+        tableBody.appendChild(tableRow);
+    });
+}
+// Helper function to get the value of a cookie
+function getCookie(name) {
+    var cookieValue = document.cookie.match(`(^|;)\\s*${name}\\s*=\\s*([^;]+)`);
+    return cookieValue ? cookieValue.pop() : "";
+}
+
+// Helper function to set a cookie
+function setCookie(name, value) {
+    document.cookie = name + "=" + value;
+}
+
+function setTimeCookie(){
+    setCookie("timeSet", new Date().toLocaleString());
+}
+
+function updateLatestPull() {
+    const latestPullElement = document.getElementById('latestPull');
+    const formattedDate = getCookieDatetime();
+    latestPullElement.textContent = `Latest Exchange Rates as Per: ${formattedDate}`;
+  }
+
+function getCookieDatetime() {
+    const cookie = getCookie("timeSet");
+
+    return cookie;
+  }
+  

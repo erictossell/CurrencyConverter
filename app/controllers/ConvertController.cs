@@ -56,6 +56,24 @@ namespace CurrencyConverter.Controllers
             string output = CurrencyAPI.GetSymbol(to) + conv.ToString();
             return output;
         }
+
+        public static string RetrieveRate(string from, string to)
+        {
+            CurrencyAPI api = new CurrencyAPI();
+            var exchangeRate = api.Get($"https://api.freecurrencyapi.com/v1/latest?apikey=x0fISZ5yVuubfp91QA5YJyisbCvxqKkMMpjkOdkc&base_currency={from.ToUpper()}&currencies={to.ToUpper()}");
+            string rate = exchangeRate.ToString();
+            rate = Regex.Split(rate, @"\:")[Regex.Split(rate, @"\:").Length - 1];
+            Match match = Regex.Match(rate, @"[0-9\.]+");
+            Console.WriteLine(match.Success.ToString() ?? "FAIL");
+            Console.WriteLine(match.Value.ToString() ?? "EMPTY");
+            decimal conv = 0;
+            if(match.Success && match.Value != null){
+                decimal.TryParse(match.Value, out conv);
+            }
+
+            string output = conv.ToString();
+            return output;
+        }
         
     }
 }

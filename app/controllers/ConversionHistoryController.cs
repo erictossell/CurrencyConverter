@@ -27,17 +27,16 @@ namespace CurrencyConverter.Controllers
                 string[] previousValues = cookieValue.Split(',');
 
                 if(previousValues.Length >= 20 && addRow){
-                    int insertInd = previousValues.Length - 4;
-                    // Shift the elements up by four positions
-                    for (int i = 0; i < insertInd; i++)
-                    {
-                        previousValues[i] = previousValues[i + 4];
-                    }
-                    
-                    previousValues[insertInd] = nonNullAmt;
-                    previousValues[insertInd + 1] = from;
-                    previousValues[insertInd + 2] = to;
-                    previousValues[insertInd + 3] = result;
+                     int shiftAmount = 4;
+
+                    // Shift the elements to make room for new values
+                    Array.Copy(previousValues, 0, previousValues, shiftAmount, previousValues.Length - shiftAmount);
+
+                    // Update the first four elements
+                    previousValues[0] = nonNullAmt;
+                    previousValues[1] = from;
+                    previousValues[2] = to;
+                    previousValues[3] = result;
                     values = previousValues;
                 }
                 else if(addRow){
