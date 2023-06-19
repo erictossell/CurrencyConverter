@@ -115,11 +115,10 @@ function retrieveRates() {
         var tableHeader = document.createElement("th");
         tableHeader.textContent = fromCurrency;
         tableRow.appendChild(tableHeader);
-
         currenciesUsed.forEach((toCurrency) => {
             var cookieName = `${fromCurrency}-${toCurrency}`;
             var cookieValue = getCookie(cookieName);
-            if (cookieValue != null){
+            if (cookieValue != ""){
         
                 var tableData = document.createElement("td");
                 tableData.textContent = cookieValue; // Assuming `data.result` contains the exchange rate
