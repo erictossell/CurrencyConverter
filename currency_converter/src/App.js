@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
+import Cookies from 'js-cookie';
 
 function Head(){
   return(
@@ -20,6 +21,33 @@ function Header() {
 
 
 function ConverterForm() {
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    const fetchData = () => {
+      const cookieValue = Cookies.get('ConversionHistory');
+      console.log(cookieValue);
+      if (cookieValue) {
+        const cookieDataArray = cookieValue.split(',');
+        //setData(parsedData);
+
+      const mappedData = [];
+      for (let i = 0; i < cookieDataArray.length; i += 4) {
+        const dataObject = {
+          amount: cookieDataArray[i],
+          from: cookieDataArray[i + 1],
+          to: cookieDataArray[i + 2],
+          result: cookieDataArray[i + 3]
+        };
+        mappedData.push(dataObject);
+      }
+
+        setData(mappedData);
+      }
+    };
+  
+    fetchData();
+  }, []);
+
   const [amount, setAmount] = useState('');
   const [fromCurrency, setFromCurrency] = useState('CAD');
   const [toCurrency, setToCurrency] = useState('USD');
@@ -42,6 +70,26 @@ function ConverterForm() {
     }
     setAmount(dec);
   };
+  
+
+  const saveConversionHistory = (amount, fromCurrency, toCurrency, outputResult) => {
+    // Send a POST request to the controller endpoint
+    fetch(`http://localhost:5000/convertHistory?amount=${amount}&from=${fromCurrency}&to=${toCurrency}&result=${outputResult}&addRow=True`)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data.toString());
+        // Conversion saved successfully
+        console.log('Conversion saved');
+        var responseData = data.result;
+        console.log(responseData);
+        Cookies.set("ConversionHistory",responseData);
+        //setTableData(newTableData);
+      })
+      .catch(error => {
+        // Error making the request
+        console.error('Request error:', error);
+      });
+    }
 
   const handleConvertClick = () => {
     const parsedAmount = parseFloat(amount);
@@ -69,16 +117,21 @@ function ConverterForm() {
         .then((data) => {        
           newOutputResult = `${data.result}`;
           setOutputResult(newOutputResult);
-          console.log(newOutputResult)
-         // saveConversionHistory(parsedAmount, fromCurrency, toCurrency, data.result, true);
+          console.log(newOutputResult)     
+          document.getElementById('outputResult').style.color = 'green';
+          document.getElementById('outputResult').style.fontSize = 'big';
+          saveConversionHistory(parsedAmount,fromCurrency,toCurrency,newOutputResult);
         })
         .catch((error) => {
           console.error(error); // Log any errors
           newOutputResult = `${error}`; // Update with appropriate error handling
           setOutputResult(newOutputResult);
+          document.getElementById('outputResult').style.color = 'red';
+          document.getElementById('outputResult').style.fontSize = 'small';
         });
     }
   };
+
 
 
 
@@ -109,7 +162,7 @@ function ConverterForm() {
           </select>
         </div>
         <button type="button" id="convertButton" onClick={handleConvertClick}>Convert:</button>
-        <span id="outputResult" className="result">{outputResult}</span>
+        <span id="outputResult" className="result">{outputResult} </span>
         <hr />
         <p id="convHistLabel">Conversion History</p>
         <table id="conversionHistory">
@@ -121,7 +174,14 @@ function ConverterForm() {
               <th>Result</th>
             </tr>
           </thead>
-          <tbody></tbody>
+          <tbody> {data.map((data, index) => (
+            <tr key={index}>
+              <td>{data.amount}</td>
+              <td>{data.from}</td>
+              <td>{data.to}</td>
+              <td>{data.result}</td>
+            </tr>))}
+          </tbody>
         </table>
         <p id="smallText">(Last Five Conversions)</p>
       </span>
