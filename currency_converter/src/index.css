@@ -1,13 +1,164 @@
 body {
+  display: flex;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
+  text-align: center;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+header{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #4CAF50;
+  color: white;
+  text-align: center;
+}
+
+h1 {
+  background-color: #4CAF50;
+  color: white;
+  margin: 0;
+  padding: 20px;
+  text-align: center;
+}
+
+p {
+  background-color: #4CAF50;
+  color: white;
+  margin: 0;
+  padding: 10px;
+  text-align: center;
+}
+
+footer {
+  position: fixed;
+  bottom:0;
+  left: 0;
+  width: 100%;
+  background-color: #4CAF50;
+  color: white;
+  text-align: center;
+}
+
+label {
+  display: block;
+  margin: 10px;
+}
+
+input[type="text"],
+select {
+  display: block;
+  margin: 10px auto;
+  padding: 12px 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+button[type="button"] {
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 10px auto;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button[type="button"]:hover {
+  background-color: #45a049;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th,
+td {
+  padding: 8px;
+  background-color: #f2f2f2;
+  text-align: center;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+.result {
+  display: block;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.container {
+  flex: 1;
+  display: flex;
+  flex-direction:row;
+  align-items: center;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  justify-content: flex-start;
+  margin-left: 25%; /* Adjust the margin value as desired */
+}
+
+.content2 {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-right: 45%; /* Adjust the margin value as desired */
+  margin-bottom: 30%;
+}
+
+
+.card {
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.card2 {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+#convertButton {
+  font-size: 20px;
+  font-weight: bold;
+  width: 200px;
+}
+
+#convHistLabel {
+  background-color: #f2f2f2;
+  display: block;
+  font-size: 20px;
+  font-weight: bold;
+  color: black;
+  text-align: center;
+}
+
+#smallText {
+  background-color: #f2f2f2;
+  font-size: 14px;
+  font-weight: bold;
+  color: black;
+}
+
+.outputResults {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0,1)
 }
