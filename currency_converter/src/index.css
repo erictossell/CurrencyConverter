@@ -88,40 +88,43 @@ th {
   background-color: #f2f2f2;
 }
 
+
+
 .result {
   display: block;
   font-size: 24px;
   font-weight: bold;
 }
 
-.container {
-  flex: 1;
+
+#alphaDiv {
   display: flex;
-  flex-direction:row;
-  align-items: center;
+  margin-left:20vh;
 }
 
 .content {
   flex: 1;
   display: flex;
+  flex-direction: row;
   justify-content: flex-start;
-  margin-left: 25%; /* Adjust the margin value as desired */
+  margin-left: 5%; /* Adjust the margin value as desired */
+  padding-top: 10vh;
 }
 
 .content2 {
-  flex: 1;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  margin-right: 45%; /* Adjust the margin value as desired */
-  margin-bottom: 30%;
+  margin-top:20vh;
+  margin-left:20vh;
+}
+#cardER{
+  margin-left:20vh;
 }
 
-
 .card {
-  margin-top: 20px;
+  margin-top:10vh;
+  margin-left:10vh;
   padding: 20px;
   border-radius: 4px;
+  margin-bottom:20vh;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 
@@ -139,6 +142,10 @@ th {
   width: 200px;
 }
 
+#inputCurr{
+  display: inline-block;
+}
+
 #convHistLabel {
   background-color: #f2f2f2;
   display: block;
@@ -154,6 +161,7 @@ th {
   font-weight: bold;
   color: black;
 }
+
 
 .outputResults {
   display: inline-block;

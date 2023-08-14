@@ -1,6 +1,8 @@
 import React, { useState, useEffect} from 'react';
 import Cookies from 'js-cookie';
 
+
+
 function Head(){
   return(
     <head>
@@ -19,9 +21,126 @@ function Header() {
   );
 }
 
+function ExchangeRateTable() {
+  const [currenciesUsed, setCurrencesUsed] = useState(["CAD", "USD", "GBP", "EUR", "CNY"]);
+  const maxConversions = 5;
+
+  useEffect(() => {
+    const tableBody = document.querySelector("#exchangeRates tbody");
+    tableBody.innerHTML = ""; // Clear existing table body
+
+    currenciesUsed.forEach((fromCurrency) => {
+      const tableRow = document.createElement("tr");
+      const tableHeader = document.createElement("th");
+      tableHeader.textContent = fromCurrency;
+      tableRow.appendChild(tableHeader);
+
+      currenciesUsed.forEach((toCurrency) => {
+        const cookieName = `${fromCurrency}-${toCurrency}`;
+        const cookieValue = Cookies.get(cookieName);
+        if (cookieValue !== undefined) {
+          const tableData = document.createElement("td");
+          tableData.textContent = cookieValue; // Assuming `data.result` contains the exchange rate
+          tableRow.appendChild(tableData);
+        } else {
+          fetch(`http://localhost:5000/generateExchangeRates?from=${fromCurrency}&to=${toCurrency}`)
+            .then(response => response.json())
+            .then(data => {
+              
+              console.log(data.toString());
+              // Conversion saved successfully
+              console.log(`Exchange rate saved: from=${fromCurrency}&to=${toCurrency} result = ${data.result}`);
+
+              const tableData = document.createElement("td");
+              tableData.textContent = data.result; // Assuming `data.result` contains the exchange rate
+              tableRow.appendChild(tableData);
+
+              const cookieName = `${fromCurrency}-${toCurrency}`;
+              const cookieValue = data.result;
+              document.cookie = `${cookieName}=${cookieValue}; expires=Thu, 1 Jan 2025 12:00:00 UTC; path=/`;
+            })
+            .catch(error => {
+              // Error making the request
+              console.error('Request error:', error);
+            });
+        }
+      });
+
+      tableBody.appendChild(tableRow);
+    });
+  }, []);
+
+  function AddCurrencyDropdown() {
+
+    const [newCurrency, setNewCurrency] = useState('JPY');
+  
+    const HandleAddClick  = () => {
+      const updatedCurrencies = [...currenciesUsed, newCurrency.toUpperCase()];
+      setCurrencesUsed(updatedCurrencies);
+    }
+  
+    return (
+      <span>
+        <p>Add Currency: <select id="inputCurr" className="inputs" name ="currencyAdd"
+         onChange={(e) => setNewCurrency(e.target.value)}>
+            <option value="JPY">JPY - Japanese Yen</option>
+            <option value="BGN">BGN - Bulgarian Lev</option>
+            <option value="CZK">CZK - Czech Republic Koruna</option>
+            <option value="DKK">DKK - Danish Krone</option>
+            <option value="HUF">HUF - Hungarian Forint</option>
+            <option value="PLN">PLN - Polish Zloty</option>
+            <option value="RON">RON - Romanian Leu</option>
+            <option value="SEK">SEK - Swedish Krona</option>
+            <option value="CHF">CHF - Swiss Franc</option>
+            <option value="ISK">ISK - Icelandic Króna</option>
+            <option value="NOK">NOK - Norwegian Krone</option>
+            <option value="HRK">HRK - Croatian Kuna</option>
+            <option value="RUB">RUB - Russian Ruble</option>
+            <option value="TRY">TRY - Turkish Lira</option>
+            <option value="AUD">AUD - Australian Dollar</option>
+            <option value="BRL">BRL - Brazilian Real</option>
+            <option value="HKD">HKD - Hong Kong Dollar</option>
+            <option value="IDR">IDR - Indonesian Rupiah</option>
+            <option value="ILS">ILS - Israeli New Sheqel</option>
+            <option value="INR">INR - Indian Rupee</option>
+            <option value="KRW">KRW - South Korean Won</option>
+            <option value="MXN">MXN - Mexican Peso</option>
+            <option value="MYR">MYR - Malaysian Ringgit</option>
+            <option value="NZD">NZD - New Zealand Dollar</option>
+            <option value="PHP">PHP - Philippine Peso</option>
+            <option value="SGD">SGD - Singapore Dollar</option>
+            <option value="THB">THB- Thai Baht</option>
+            <option value="ZAR">ZAR - South African Rand</option>
+          </select> <button onClick={HandleAddClick} >Add</button></p>
+         
+        </span>
+    );
+  }
+
+  return (
+        <span className="cardER" id="cardER">
+          <AddCurrencyDropdown /> 
+          <p id="latestPull">Exchange Rates as per latest pull.</p>
+          <table id="exchangeRates">
+            <thead>
+              <tr>
+                <th></th>
+                <th>CAD</th>
+                <th>USD</th>
+                <th>GBP</th>
+                <th>EUR</th>
+                <th>CNY</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </span>
+  );
+}
+
 
 function ConverterForm() {
-  const [data, setData] = useState([]);
+  const [formData, setFormData] = useState([]);
   useEffect(() => {
     const fetchData = () => {
       const cookieValue = Cookies.get('ConversionHistory');
@@ -41,7 +160,7 @@ function ConverterForm() {
         mappedData.push(dataObject);
       }
 
-        setData(mappedData);
+      setFormData(mappedData);
       }
     };
   
@@ -77,13 +196,23 @@ function ConverterForm() {
     fetch(`http://localhost:5000/convertHistory?amount=${amount}&from=${fromCurrency}&to=${toCurrency}&result=${outputResult}&addRow=True`)
       .then(response => response.json())
       .then(data => {
-        console.log(data.toString());
-        // Conversion saved successfully
+
+        //check if cookie has data
+        var cookie = Cookies.get("ConversionHistory");
+        console.log("Cookie:", cookie);
+        var responseData;
+        
+        if(cookie !== undefined){
+          responseData = cookie;
+          console.log("Previous cookie found =" + cookie.value);
+          responseData += "," + data.result;
+        }
+        else{
+          responseData = data.result;
+        }
+        console.log("new data added:" + responseData.toString());
         console.log('Conversion saved');
-        var responseData = data.result;
-        console.log(responseData);
         Cookies.set("ConversionHistory",responseData);
-        //setTableData(newTableData);
       })
       .catch(error => {
         // Error making the request
@@ -132,11 +261,7 @@ function ConverterForm() {
     }
   };
 
-
-
-
   return (
-    <div className="content">
       <span className="card">
         <label htmlFor="inputAmount">Amount:</label>
         <input type="text" id="inputAmount" name="amount" placeholder="00.00"  value={amount}
@@ -174,7 +299,7 @@ function ConverterForm() {
               <th>Result</th>
             </tr>
           </thead>
-          <tbody> {data.map((data, index) => (
+          <tbody> {formData.map((data, index) => (
             <tr key={index}>
               <td>{data.amount}</td>
               <td>{data.from}</td>
@@ -185,25 +310,6 @@ function ConverterForm() {
         </table>
         <p id="smallText">(Last Five Conversions)</p>
       </span>
-      <div className="content2">
-        <span className="cardER" id="cardER">
-          <p id="latestPull">Exchange Rates as per latest pull.</p>
-          <table id="exchangeRates">
-            <thead>
-              <tr>
-                <th></th>
-                <th>CAD</th>
-                <th>USD</th>
-                <th>GBP</th>
-                <th>EUR</th>
-                <th>CNY</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </span>
-      </div>
-    </div>
   );
 }
 
@@ -229,12 +335,15 @@ function Footer() {
 
 function App() {
   return (
-    <div>
-      <Head/>
-      <Header />
-      <ConverterForm />
-      <Footer />
-    </div>
+    <div id="alphaDiv">
+    <Head />
+    <Header />
+    <ConverterForm />
+      <div className="content2">
+        <ExchangeRateTable />
+      </div>
+    <Footer />
+  </div>
   );
 }
 
