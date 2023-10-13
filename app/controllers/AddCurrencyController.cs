@@ -14,7 +14,7 @@ namespace app.controllers
         public IActionResult Get(string newCurrency)
         {    
             CurrencyAPI api = new CurrencyAPI();
-            var exchangeRate = api.Get($"https://api.freecurrencyapi.com/v1/latest?apikey=x0fISZ5yVuubfp91QA5YJyisbCvxqKkMMpjkOdkc&base_currency={newCurrency}");
+            var exchangeRate = api.Get($"https://api.freecurrencyapi.com/v1/latest?apikey={api.API_KEY}&base_currency={newCurrency}");
             Console.WriteLine(exchangeRate.ToString());
             return Ok(new { success = true, result = exchangeRate });
         }

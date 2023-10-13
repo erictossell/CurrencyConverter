@@ -4,10 +4,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
 
+
 namespace CurrencyConverter.Helpers
 {
+
     public class CurrencyAPI
     {
+        public string API_KEY = "fca_live_7vielwq8tF16w7F9J9pQs0ciM5d1jXoi0mjhlJcZ";
         private readonly HttpClient client;
 
         public CurrencyAPI()

@@ -1,0 +1,9 @@
+{
+    "ConnectionStrings": {
+      "DefaultConnection": "Data Source=currencyExchanges.db"
+    },
+    "AppSettings": {
+      "ApiKey": "your-api-key"
+    }
+  }
+  
