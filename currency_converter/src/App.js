@@ -45,7 +45,11 @@ function ExchangeRateTable() {
           if (cookieValue !== null && cookieValue.split(',').length == (currenciesUsed.length * currenciesUsed.length)) {           
             const tableData = document.createElement("td");
             const values = cookieValue.split(',');
-            tableData.textContent = values[i];
+
+            const number = parseFloat(values[i]); // Convert to a number
+            const roundedDec = number.toFixed(2);
+            
+            tableData.textContent = roundedDec.toString();
             console.log("Adding table data: " + values[i] + " i = " + i.toString());
             tableRow.appendChild(tableData);
           }
@@ -154,11 +158,28 @@ function ExchangeRateTable() {
   }
 
 
-  function updateCookie(cookieName, newValue, expirationDate) {
-    // Set the updated cookie with the new value and optional expiration date
-    document.cookie = `${cookieName}=${newValue}${expirationDate ? `; expires=${expirationDate}` : ''}; path=/`;
-  }
+  // function updateCookie(cookieName, newValue, expirationDate) {
+  //   // Set the updated cookie with the new value and optional expiration date
+  //   document.cookie = `${cookieName}=${newValue}${expirationDate ? `; expires=${expirationDate}` : ''}; path=/`;
+  // }
 
+  function UpdateExchangeRateTable(newCurrency){
+    const cookieName = `CurrencyExchange`;
+    const cookieValue = getCookie(cookieName);
+    setCurrenciesUsed(newCurrency);
+      
+    if (cookieValue !== null && cookieValue.split(',').length === (currenciesUsed.length * currenciesUsed.length)) {
+      document.addEventListener('DOMContentLoaded', function () {
+        generateTableWithCookie();
+      });
+  
+      } else {
+        document.addEventListener('DOMContentLoaded', function () {
+       generateTableWithoutCookie();
+      });
+    }
+
+  }
   
   function AddCurrencyDropdown() {
 
@@ -167,6 +188,7 @@ function ExchangeRateTable() {
     const HandleAddClick  = () => {
       const updatedCurrencies = [...currenciesUsed, newCurrency.toUpperCase()];
       setCurrenciesUsed(updatedCurrencies);
+      UpdateExchangeRateTable(newCurrency.toUpperCase());
     }
   
     return (
@@ -228,17 +250,18 @@ function ExchangeRateTable() {
   );
 }
 
+ 
 
 
 function ConverterForm() {
   const [formData, setFormData] = useState([]);
-  useEffect(() => {
-    const fetchData = () => {
-      const cookieValue = Cookies.get('ConversionHistory');
-      console.log(cookieValue);
-      if (cookieValue) {
-        const cookieDataArray = cookieValue.split(',');
-        //setData(parsedData);
+
+  // Define the fetchData function
+  const fetchData = () => {
+    const cookieValue = Cookies.get('ConversionHistory');
+    console.log(cookieValue);
+    if (cookieValue) {
+      const cookieDataArray = cookieValue.split(',');
 
       const mappedData = [];
       for (let i = 0; i < cookieDataArray.length; i += 4) {
@@ -250,13 +273,42 @@ function ConverterForm() {
         };
         mappedData.push(dataObject);
       }
-
       setFormData(mappedData);
-      }
+    }
+  };
+
+
+  // Use the useEffect hook to call fetchData when the component mounts
+  useEffect(() => {
+    fetchData(); // Initial data fetch
+
+    const intervalId = setInterval(() => {
+      fetchData(); // Periodically check for changes
+    }, 1000); // Adjust the interval as needed (e.g., check every 10 seconds)
+
+    return () => {
+      clearInterval(intervalId); // Clear the interval when the component is unmounted
     };
-  
-    fetchData();
   }, []);
+
+  // Add an event listener to listen for changes to the cookie
+  useEffect(() => {
+    const handleCookieChange = (event) => {
+      // Check if the event key is "ConversionHistory"
+      if (event.key === 'ConversionHistory') {
+        // Handle the change to the cookie
+        console.log("Fetching conv history...");
+        fetchData();
+      }
+    }
+
+    window.addEventListener('storage', handleCookieChange);
+
+    return () => {
+      // Remove the event listener when the component unmounts
+      window.removeEventListener('storage', handleCookieChange);
+    };
+  }, []); 
 
   const [amount, setAmount] = useState('');
   const [fromCurrency, setFromCurrency] = useState('CAD');
@@ -264,21 +316,29 @@ function ConverterForm() {
   const [errorMsg, setErrorMsg] = useState('');
   const [outputResult, setOutputResult] = useState('00.00');
 
-  const handleInputChange = (e) => {
-    let dec = e.target.value;
+  const handleInputChange = (inputValue) => {
+      // Remove all non-numeric and non-dot characters
+  const numericValue = inputValue.replace(/[^0-9.]/g, '');
 
-    // Remove any non-numeric characters except decimal point
-    dec = dec.replace(/[^0-9.]/g, '');
+  // Split the numeric value into integer and decimal parts
+  const [integerPart, decimalPart] = numericValue.split('.');
+    // Allow the user to enter as many integer digits as they want before moving to the decimal part
+    const formattedValue =
+    integerPart && decimalPart === undefined
+      ? integerPart
+      : decimalPart
+      ? `${integerPart}.${decimalPart}`
+      : `${integerPart}.`;
 
-    // Remove leading zeros
-    dec = dec.replace(/^0+/, '');
-    
-    // Limit decimal places to 4
-    const decimalIndex = dec.indexOf('.');
-    if (decimalIndex !== -1 && dec.length > decimalIndex + 5) {
-      dec = dec.slice(0, decimalIndex + 5);
-    }
-    setAmount(dec);
+
+  if (formattedValue === '.') {
+    setAmount('');
+    return;
+  }
+
+
+  // Update the state with the formatted value
+  setAmount(formattedValue);
   };
   
 
@@ -287,14 +347,13 @@ function ConverterForm() {
     fetch(`http://localhost:5000/convertHistory?amount=${amount}&from=${fromCurrency}&to=${toCurrency}&result=${outputResult}&addRow=True`)
       .then(response => response.json())
       .then(data => {
-        //check if cookie has data
+
+        // Read the existing cookie data
         var cookieName = "ConversionHistory";
-        var cookie = document.cookie;
-
-        var responseData;
-
-        if (cookie) {
-          var cookieArray = cookie.split(";");
+        var responseData = '';
+  
+        if (document.cookie) {
+          var cookieArray = document.cookie.split(";");
           for (var i = 0; i < cookieArray.length; i++) {
             var cookiePair = cookieArray[i].split("=");
             if (cookiePair[0].trim() === cookieName) {
@@ -302,29 +361,47 @@ function ConverterForm() {
               break;
             }
           }
-        }
-
-        if (responseData) {
-          responseData += "," + data.result;
-        } else {
+        } 
+        
+        //create if doesnt exist
+        console.log("DATA.RESULT: " + data.result);
+        console.log("BEFORE: " + responseData);
+        if(data.result == null || data.result.length == 0){
           responseData = data.result;
+          console.log("Data is null??");
         }
-
+        else{
+          if (responseData.split(',').length <= 16) {
+            responseData += "," + data.result;
+            console.log("UNDER 20");
+          } else {
+            console.log("ABOVE 20 SPLIT length: " + responseData.split(',').length.toString());
+            var responseDataArray = responseData.split(',');
+            responseDataArray.splice(-4);
+            // Append the new data to the existing data
+            responseDataArray.unshift(data.result.split(',')[0], data.result.split(',')[1], data.result.split(',')[2], data.result.split(',')[3]);
+            responseData = responseDataArray.join(',');
+          }
+        }
+        console.log("AFTER: " + responseData);
+  
+        // Set the updated data back into the cookie
         document.cookie = `${cookieName}=${encodeURIComponent(responseData)}; expires=Thu, 1 Jan 2025 12:00:00 UTC; path=/`;
-
+  
         console.log("Cookie:", document.cookie);
         console.log("new data added:", responseData);
         console.log('Conversion saved');
-
       })
       .catch(error => {
         // Error making the request
         console.error('Request error:', error);
       });
   }
+  
 
   const handleConvertClick = () => {
-    const parsedAmount = parseFloat(amount);
+    let parsedAmount = parseFloat(amount); // Use let, not const
+    parsedAmount = parsedAmount.toFixed(2);
     let newErrorMsg = '';
     let newOutputResult = '';
 
@@ -346,12 +423,19 @@ function ConverterForm() {
       fetch(`http://localhost:5000/api/convert?amount=${parsedAmount}&from=${fromCurrency}&to=${toCurrency}`)
         .then((response) =>  response.json())
         .then((data) => {        
-          newOutputResult = `${data.result}`;
-          setOutputResult(newOutputResult);
-          console.log(newOutputResult)     
+          console.log("SPLIT: " + data.result.split(/[^0-9.]+/)[1]);;
+          let parsedOutput = parseFloat(data.result.split(/[^0-9.]+/)[1]);
+          if (!isNaN(parsedOutput)) {
+            parsedOutput = parsedOutput.toFixed(2);
+          } else {
+            // Handle the case where parsing is not successful
+            console.error("Failed to parse the value.");
+          }
+          setOutputResult(parsedOutput);
+          console.log(parsedOutput)     
           document.getElementById('outputResult').style.color = 'green';
           document.getElementById('outputResult').style.fontSize = 'big';
-          saveConversionHistory(parsedAmount,fromCurrency,toCurrency,newOutputResult);
+          saveConversionHistory(parsedAmount,fromCurrency,toCurrency,parsedOutput);
         })
         .catch((error) => {
           console.error(error); // Log any errors
@@ -368,7 +452,7 @@ function ConverterForm() {
         <div><h2>Conversion Widget:</h2></div>
         <label htmlFor="inputAmount">Amount:</label>
         <input type="text" id="inputAmount" name="amount" placeholder="00.00"  value={amount}
-        onInput={(e) => setAmount(e.target.value)} onChange={handleInputChange} />
+        onInput={(e) => setAmount(e.target.value)} onChange={(e) => handleInputChange(e.target.value)} />
         <div id="inputsDiv">
           <label htmlFor="inputFrom" className="centerLabel">From:</label>
           <select  value={fromCurrency} onChange={(e) => setFromCurrency(e.target.value)} id="inputFrom" name="from" className="inputs" >
