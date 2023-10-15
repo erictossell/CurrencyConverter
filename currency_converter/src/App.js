@@ -21,118 +21,233 @@ function Header() {
   );
 }
 function ExchangeRateTable() {
-  const [currenciesUsed, setCurrenciesUsed] = useState(["CAD", "USD", "GBP", "EUR", "CNY"]);
+  const [currenciesUsed, setCurrenciesUsed] = useState([
+    "CAD",
+    "USD",
+    "GBP",
+    "EUR",
+    "CNY",
+  ]);
+  currenciesUsed.forEach((c) => {
+    console.log("EXCHANGE RATE: " + c);
+  });
   const [cookieVals, setCookieVals] = useState([]); // Initialize as an empty array
-  const promises = []; 
+  const promises = [];
 
-  const dataMatrix = Array(currenciesUsed.length).fill(null).map(() => Array(currenciesUsed.length).fill(null));
-  
+  useEffect(() => {
+    // Read the "CurrenciesUsed" cookie
+    const cookieValue = getCookieValue("CurrenciesUsed");
+   
+    if (cookieValue != null) {
+      // Split the cookie value into an array of currencies
+      console.log("hello");
+      const currencies = cookieValue.split(",");
+      setCurrenciesUsed(currencies);
+    }
+  }, []);
+
+  currenciesUsed.forEach((c) => {
+    console.log("EXCHANGE RATE after CU cookie: " + c);
+  });
+
+  const dataMatrix = Array(currenciesUsed.length)
+    .fill(null)
+    .map(() => Array(currenciesUsed.length).fill(null));
+
+  function getCookieValue(cookieName) {
+    const name = cookieName + "=";
+    const cookies = document.cookie.split(";");
+    for (let i = 0; i < cookies.length; i++) {
+      let cookie = cookies[i].trim();
+      if (cookie.indexOf(name) === 0) {
+        return cookie.substring(name.length, cookie.length);
+      }
+    }
+    return null;
+  }
+
   function generateTableWithCookie() {
-      var i = 0;
-      console.log("GENERATE TABLE WITH COOKIE");      
-      const tableBody = document.querySelector("#exchangeRates tbody");
-        tableBody.innerHTML = ""; // Clear existing table body
-        const cookieName = `CurrencyExchange`; // Use a consistent cookie name
-        const updatedCookieVals = [...cookieVals]; // Copy the existing cookieVals array
-        const cookieValue = getCookie(cookieName);   
-        currenciesUsed.forEach((fromCurrency) => {
-        
-        const tableRow = document.createElement("tr");
-        const tableHeader = document.createElement("th");
-        tableHeader.textContent = fromCurrency;
-        tableRow.appendChild(tableHeader);
-        currenciesUsed.forEach((toCurrency) => {
-          if (cookieValue !== null && cookieValue.split(',').length == (currenciesUsed.length * currenciesUsed.length)) {           
-            const tableData = document.createElement("td");
-            const values = cookieValue.split(',');
+    var i = 0;
+    console.log("GENERATE TABLE WITH COOKIE");
+    const tableBody = document.querySelector("#exchangeRates tbody");
 
-            const number = parseFloat(values[i]); // Convert to a number
-            const roundedDec = number.toFixed(2);
-            
-            tableData.textContent = roundedDec.toString();
-            console.log("Adding table data: " + values[i] + " i = " + i.toString());
-            tableRow.appendChild(tableData);
-          }
-          i++;
-        });
-        tableBody.appendChild(tableRow);
-      });
-      // No need to wait for promises, as this is the case where there's a cookie
-    
-    }
-    
-  function generateTableWithoutCookie() {
-      
-      const tableBody = document.querySelector("#exchangeRates tbody");
-      tableBody.innerHTML = ""; // Clear existing table body
-      const cookieName = `CurrencyExchange`; // Use a consistent cookie name
-      const updatedCookieVals = []; // Copy the existing cookieVals array
-      const requests = [];
-    
-      currenciesUsed.forEach((fromCurrency, fromIndex) => {
-        currenciesUsed.forEach((toCurrency, toIndex) => {
-          const request = fetch(`http://localhost:5000/generateExchangeRates?from=${fromCurrency}&to=${toCurrency}`)
-            .then(response => response.json())
-            .then(data => {
-              const result = data.result;
-              dataMatrix[fromIndex][toIndex] = result;
-              return result;
-            })
-            .catch(error => {
-              console.error('Request error:', error);
-              const errorResult = 'Error';
-              dataMatrix[fromIndex][toIndex] = errorResult;
-              return errorResult;
-            });
-    
-          requests.push(request);
-        });
-      });
-     
+    // Read the "CurrenciesUsed" cookie
+    const cookieValueCU = getCookieValue("CurrenciesUsed");
 
-      Promise.all(requests)
-      .then(() => {
-          dataMatrix.forEach((rowData, fromIndex) => {
-          const tableRow = document.createElement("tr");
-          const tableHeader = document.createElement("th");
-          tableHeader.textContent = currenciesUsed[fromIndex];
-          tableRow.appendChild(tableHeader);
-  
-          rowData.forEach((cellData) => {
-            const tableData = document.createElement("td");
-            tableData.textContent = cellData;
-            tableRow.appendChild(tableData);
-            updatedCookieVals.push(cellData);
-          });
-  
-          tableBody.appendChild(tableRow);
-        });
-  
-        if (updatedCookieVals.length > 0) {
-          document.cookie = `${cookieName}=${updatedCookieVals.join(',')}; expires=Thu, 1 Jan 2025 12:00:00 UTC; path=/`;
-        }
-      });
-       
+    if (cookieValueCU != null) {
+      // Split the cookie value into an array of currencies
+      const currencies = cookieValueCU.split(",");
+      setCurrenciesUsed(currencies);
     }
 
-  const cookieName = `CurrencyExchange`;
-  const cookieValue = getCookie(cookieName);
-    
-  if (cookieValue !== null && cookieValue.split(',').length === (currenciesUsed.length * currenciesUsed.length)) {
-    document.addEventListener('DOMContentLoaded', function () {
-      generateTableWithCookie();
+    currenciesUsed.forEach((c) => {
+      console.log("gen table with cook after CU cookie: " + c);
     });
 
-    } else {
-      document.addEventListener('DOMContentLoaded', function () {
-     generateTableWithoutCookie();
+    tableBody.innerHTML = ""; // Clear existing table body
+    const cookieName = `CurrencyExchange`; // Use a consistent cookie name
+    const updatedCookieVals = [...cookieVals]; // Copy the existing cookieVals array
+    const cookieValue = getCookie(cookieName);
+
+    // Create the header row with currenciesUsed
+    const headerRow = document.createElement("tr");
+    const emptyHeader = document.createElement("th"); // Empty cell for the top-left corner
+    headerRow.appendChild(emptyHeader);
+
+    currenciesUsed.forEach((toCurrency) => {
+      const tableHeader = document.createElement("th");
+      tableHeader.textContent = toCurrency;
+      headerRow.appendChild(tableHeader);
+    });
+
+    tableBody.appendChild(headerRow);
+
+    currenciesUsed.forEach((fromCurrency) => {
+      const tableRow = document.createElement("tr");
+      const tableHeader = document.createElement("th");
+      tableHeader.textContent = fromCurrency;
+      tableRow.appendChild(tableHeader);
+      currenciesUsed.forEach((toCurrency) => {
+        if (
+          cookieValue !== null &&
+          cookieValue.split(",").length ==
+            currenciesUsed.length * currenciesUsed.length
+        ) {
+          const tableData = document.createElement("td");
+          const values = cookieValue.split(",");
+
+          const number = parseFloat(values[i]); // Convert to a number
+          const roundedDec = number.toFixed(2);
+
+          tableData.textContent = roundedDec.toString();
+          console.log(
+            "Adding table data: " + values[i] + " i = " + i.toString()
+          );
+          tableRow.appendChild(tableData);
+        }
+        i++;
+      });
+      tableBody.appendChild(tableRow);
+    });
+    // No need to wait for promises, as this is the case where there's a cookie
+  }
+
+  function generateTableWithoutCookie() {
+    const dataMatrix = Array(currenciesUsed.length)
+      .fill(null)
+      .map(() => Array(currenciesUsed.length).fill(null));
+    const tableBody = document.querySelector("#exchangeRates tbody");
+    tableBody.innerHTML = ""; // Clear existing table body
+    const cookieName = `CurrencyExchange`; // Use a consistent cookie name
+    const updatedCookieVals = []; // Copy the existing cookieVals array
+    const requests = [];
+    // Read the "CurrenciesUsed" cookie
+    const cookieValueCU = getCookieValue("CurrenciesUsed");
+
+    if (cookieValueCU != null) {
+      // Split the cookie value into an array of currencies
+      const currencies = cookieValueCU.split(",");
+      console.log(currencies[-1]);
+    }
+
+    currenciesUsed.forEach((c) => {
+      console.log("gen table with cook after CU cookie: " + c);
+    });
+    currenciesUsed.forEach((fromCurrency, fromIndex) => {
+      currenciesUsed.forEach((toCurrency, toIndex) => {
+        const request = fetch(
+          `http://localhost:5000/generateExchangeRates?from=${fromCurrency}&to=${toCurrency}`
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            const result = data.result;
+            dataMatrix[fromIndex][toIndex] = result;
+            return result;
+          })
+          .catch((error) => {
+            console.error("Request error:", error);
+            const errorResult = "Error";
+            dataMatrix[fromIndex][toIndex] = errorResult;
+            return errorResult;
+          });
+
+        requests.push(request);
+      });
+    });
+
+    Promise.all(requests).then(() => {
+      // Create the header row with currenciesUsed
+      const headerRow = document.createElement("tr");
+      const emptyHeader = document.createElement("th"); // Empty cell for the top-left corner
+      headerRow.appendChild(emptyHeader);
+
+      currenciesUsed.forEach((toCurrency) => {
+        const tableHeader = document.createElement("th");
+        tableHeader.textContent = toCurrency;
+        headerRow.appendChild(tableHeader);
+      });
+
+      tableBody.appendChild(headerRow);
+
+      dataMatrix.forEach((rowData, fromIndex) => {
+        const tableRow = document.createElement("tr");
+        const tableHeader = document.createElement("th");
+        tableHeader.textContent = currenciesUsed[fromIndex];
+        tableRow.appendChild(tableHeader);
+
+        rowData.forEach((cellData) => {
+          const tableData = document.createElement("td");
+          const number = parseFloat(cellData); // Convert to a number
+          const roundedDec = number.toFixed(2);
+
+          tableData.textContent = roundedDec.toString();
+          tableRow.appendChild(tableData);
+          updatedCookieVals.push(cellData);
+        });
+
+        tableBody.appendChild(tableRow);
+      });
+
+      if (updatedCookieVals.length > 0) {
+        document.cookie = `${cookieName}=${updatedCookieVals.join(
+          ","
+        )}; expires=Thu, 1 Jan 2025 12:00:00 UTC; path=/`;
+      }
     });
   }
 
-  function getCookie(name){
-    const cookies = document.cookie.split('; ');
+  const cookieName = `CurrencyExchange`;
+  const cookieValue = getCookie(cookieName);
+
+  if (
+    cookieValue !== null &&
+    cookieValue.split(",").length ===
+      currenciesUsed.length * currenciesUsed.length
+  ) {
+    document.addEventListener("DOMContentLoaded", function () {
+      generateTableWithCookie();
+    });
+  } else {
+    document.addEventListener("DOMContentLoaded", function () {
+      generateTableWithoutCookie();
+      var currUsed = getCookie("CurrenciesUsed");
+      if (currUsed == null) {
+        createAndSetCookie(currenciesUsed);
+      }
+    });
+  }
+
+  function createAndSetCookie(currencies) {
+    const cookieName = "CurrenciesUsed";
+    const cookieValue = currencies.join(",");
+    const expirationDate = new Date("2025-01-01").toUTCString();
+    document.cookie = `${cookieName}=${cookieValue}; expires=${expirationDate}; path=/`;
+  }
+
+  function getCookie(name) {
+    const cookies = document.cookie.split("; ");
     for (const cookie of cookies) {
-      const [cookieName, cookieValue] = cookie.split('=');
+      const [cookieName, cookieValue] = cookie.split("=");
       if (cookieName === name) {
         return cookieValue;
       }
@@ -140,15 +255,14 @@ function ExchangeRateTable() {
     return null; // Cookie not found
   }
 
- 
-  const CURRENCY_COOKIE = "currenciesExchange"
+  const CURRENCY_COOKIE = "currenciesExchange";
 
-  function loadExchangeCookie(currencyCodes){
+  function loadExchangeCookie(currencyCodes) {
     var currencyExchange = getCookie(CURRENCY_COOKIE);
-    if(currencyExchange != null){
-      var currencyCodes = currencyExchange.split(','); // Split the string into an array of codes
+    if (currencyExchange != null) {
+      var currencyCodes = currencyExchange.split(","); // Split the string into an array of codes
       // Loop through the currency codes
-      currencyCodes.forEach(function(code) {
+      currencyCodes.forEach(function (code) {
         code = code.trim(); // Trim whitespace
         if (!currenciesUsed.includes(code)) {
           currenciesUsed.push(code);
@@ -157,44 +271,60 @@ function ExchangeRateTable() {
     }
   }
 
-
   // function updateCookie(cookieName, newValue, expirationDate) {
   //   // Set the updated cookie with the new value and optional expiration date
   //   document.cookie = `${cookieName}=${newValue}${expirationDate ? `; expires=${expirationDate}` : ''}; path=/`;
   // }
 
-  function UpdateExchangeRateTable(newCurrency){
-    const cookieName = `CurrencyExchange`;
-    const cookieValue = getCookie(cookieName);
-    setCurrenciesUsed(newCurrency);
-      
-    if (cookieValue !== null && cookieValue.split(',').length === (currenciesUsed.length * currenciesUsed.length)) {
-      document.addEventListener('DOMContentLoaded', function () {
-        generateTableWithCookie();
-      });
-  
-      } else {
-        document.addEventListener('DOMContentLoaded', function () {
-       generateTableWithoutCookie();
-      });
-    }
+  function UpdateExchangeRateTable(newCurrency) {
+    var currencies = currenciesUsed;
+    currencies.push(newCurrency);
+    setCurrenciesUsed(currencies);
 
+    currenciesUsed.forEach((c) => {
+      console.log("Update table: " + c);
+    });
+    createAndSetCookie(currenciesUsed);
+    generateTableWithoutCookie();
   }
-  
-  function AddCurrencyDropdown() {
 
-    const [newCurrency, setNewCurrency] = useState('JPY');
-  
-    const HandleAddClick  = () => {
+  function setCurrencyInCookie(currencies) {
+    const cookieName = "CurrencyExchange";
+    const cookieValue = currencies.join(", "); // Convert the array to a comma-separated string
+    document.cookie = `${cookieName}=${cookieValue}; expires=Thu, 1 Jan 2025 12:00:00 UTC; path=/`;
+  }
+
+  function getCurrencyFromCookie() {
+    const cookieName = "CurrencyExchange"; // Replace with the actual cookie name
+    const cookieValue = getCookie(cookieName);
+
+    if (cookieValue) {
+      // Split the cookie value and return it as an array
+      return cookieValue.split(",").map((currency) => currency.trim());
+    } else {
+      return null; // Return null if the cookie is not found or empty
+    }
+  }
+
+  function AddCurrencyDropdown() {
+    const [newCurrency, setNewCurrency] = useState("JPY");
+
+    const HandleAddClick = () => {
       const updatedCurrencies = [...currenciesUsed, newCurrency.toUpperCase()];
       setCurrenciesUsed(updatedCurrencies);
       UpdateExchangeRateTable(newCurrency.toUpperCase());
-    }
-  
+    };
+
     return (
       <span>
-        <p>Add Currency: <select id="inputCurr" className="inputs" name ="currencyAdd"
-         onChange={(e) => setNewCurrency(e.target.value)}>
+        <p>
+          Add Currency:{" "}
+          <select
+            id="inputCurr"
+            className="inputs"
+            name="currencyAdd"
+            onChange={(e) => setNewCurrency(e.target.value)}
+          >
             <option value="JPY">JPY - Japanese Yen</option>
             <option value="BGN">BGN - Bulgarian Lev</option>
             <option value="CZK">CZK - Czech Republic Koruna</option>
@@ -205,7 +335,7 @@ function ExchangeRateTable() {
             <option value="SEK">SEK - Swedish Krona</option>
             <option value="CHF">CHF - Swiss Franc</option>
             <option value="ISK">ISK - Icelandic Króna</option>
-            <option value="NOK">NOK - Norwegian Krone</option> 
+            <option value="NOK">NOK - Norwegian Krone</option>
             <option value="HRK">HRK - Croatian Kuna</option>
             <option value="RUB">RUB - Russian Ruble</option>
             <option value="TRY">TRY - Turkish Lira</option>
@@ -223,32 +353,27 @@ function ExchangeRateTable() {
             <option value="SGD">SGD - Singapore Dollar</option>
             <option value="THB">THB- Thai Baht</option>
             <option value="ZAR">ZAR - South African Rand</option>
-          </select> <button onClick={HandleAddClick} >Add</button></p>
-         
-        </span>
+          </select>{" "}
+          <button onClick={HandleAddClick}>Add</button>
+        </p>
+      </span>
     );
   }
 
   return (
-        <span className="cardER" id="cardER">
-          <AddCurrencyDropdown /> 
-          <p id="latestPull">Exchange Rates as per latest pull.</p>
-          <table id="exchangeRates">
-            <thead>
-              <tr>
-                <th></th>
-                <th>CAD</th>
-                <th>USD</th>
-                <th>GBP</th>
-                <th>EUR</th>
-                <th>CNY</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </span>
+    <span className="cardER" id="cardER">
+      <AddCurrencyDropdown />
+      <p id="latestPull">Exchange Rates as per latest pull.</p>
+      <table id="exchangeRates">
+        <thead>
+          <tr></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </span>
   );
 }
+
 
  
 
@@ -503,18 +628,18 @@ function ConverterForm() {
 function Footer() {
   return (
     <footer>
-      <p>
-        Written in C# and .NET (with JavaScript) by David Wagner - 2023 <br />
-        <br />
-        <a href="https://github.com/devdavidwagner/CurrencyConverter">
-          <img src="/images/GitHub-Mark.png" alt="GitHub" width="20" height="20" style={{ verticalAlign: 'middle' }} /> Github Repository
-        </a>
-        <a href="https://www.linkedin.com/in/david-karl-wagner/">
-          <img src="/images/LinkedIn-Mark.PNG" alt="LinkedIn" width="20" height="20" style={{ verticalAlign: 'middle', paddingLeft: '25px' }} /> My LinkedIn
-        </a>
+        <p>         
+            Written in C# and .NET (with React + Javascript) by David Wagner - 2023 <br />
+            <br />
+            <a href="https://github.com/devdavidwagner/CurrencyConverter">
+              <img src="/images/GitHub-Mark.png" alt="GitHub" width="20" height="20" style={{ verticalAlign: 'middle' }} /> Github Repository
+            </a>
+            <a href="https://www.linkedin.com/in/david-karl-wagner/">
+              <img src="/images/LinkedIn-Mark.PNG" alt="LinkedIn" width="20" height="20" style={{ verticalAlign: 'middle', paddingLeft: '25px' }} /> My LinkedIn
+            </a>
       </p>
-      <p>
-        Exchange Rates pulled from <a href="https://freecurrencyapi.com/">Free Currency API</a>
+       <p>
+          Exchange Rates pulled from <a href="https://freecurrencyapi.com/">Free Currency API</a>
       </p>
     </footer>
   );
