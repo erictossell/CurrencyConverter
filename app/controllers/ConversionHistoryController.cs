@@ -47,7 +47,7 @@ namespace CurrencyConverter.Controllers
                 }
                
             }
-             
+            
             string joinedString = string.Join(",", values);
             if(addRow){
                 Response.Cookies.Append("ConversionHistory", joinedString);
