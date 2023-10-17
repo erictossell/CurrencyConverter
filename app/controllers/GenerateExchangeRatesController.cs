@@ -24,9 +24,18 @@ namespace CurrencyConverter.Controllers
             return Ok(new { success = true, result = exchangeRate });
         }
 
+        public string RetrieveSymbol(string currencyName){
+             var symbol = _context.Currencies 
+                .Where(c => c.NameCode.ToUpper().Trim() == currencyName.ToUpper().Trim())
+                .Select(c => c.Symbol)
+                .FirstOrDefault();
+
+            return symbol;
+        }
+
         public string RetrieveRate(string from, string to)
         {
-            // Use Entity Framework Core to retrieve exchange rates from the database
+                // Use Entity Framework Core to retrieve exchange rates from the database
                 //get IDS
                 var fromID = _context.Currencies 
                 .Where(c => c.NameCode.ToUpper().Trim() == from.ToUpper().Trim())
@@ -37,6 +46,8 @@ namespace CurrencyConverter.Controllers
                 .Where(c => c.NameCode.ToUpper().Trim()  == to.ToUpper().Trim() )
                 .Select(c => c.ID)
                 .FirstOrDefault();
+
+                string toSymbol = RetrieveSymbol(to);
 
               
 
@@ -53,26 +64,26 @@ namespace CurrencyConverter.Controllers
                 }
 
                 //get rate
-                var exchangeRate = _context.Exchanges
+                var rate = _context.Exchanges
                     .Where(c => (c.CurrAID == fromID && c.CurrBID == toID))
                     .Select(c => c.BaseExchangeRate).FirstOrDefault();
 
                // double finalRate = Math.Round(exchangeRate, 2);
 
-                System.Console.WriteLine($"FROMID:{fromID} TOID: {toID} FROMCURR: {from} TOCURR: {to} EXCHANGERATE: {exchangeRate}");
- 
-                decimal exRate = 0;
-                if (exchangeRate != null)
+                System.Console.WriteLine($"FROMID:{fromID} TOID: {toID} FROMCURR: {from} TOCURR: {to} EXCHANGERATE: {rate} SYMBOL: {toSymbol}");
+
+                string returnedString = toSymbol + rate.ToString();
+                
+                if (returnedString != null)
                 {
                     // Use the retrieved exchange rate
-                    return exchangeRate.ToString();
+                    return returnedString.ToString();
                 }
                 else
                 {
                     // Handle the case where the exchange rate is not found in the database
                    return "NA";
                 }
-     
         }         
     }
 }

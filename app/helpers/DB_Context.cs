@@ -7,6 +7,7 @@ public class Currency
     public string FullName { get; set; }
     public string Country { get; set; }
     public string  BaseExchangeUSD { get; set; }
+    public string Symbol { get; set; }
 }
 
 public class Exchange

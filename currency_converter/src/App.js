@@ -9,6 +9,7 @@ function Head(){
     <title>Currency Converter</title>
     <link rel="stylesheet" type="text/css" href="/styles/styles.css" />
     <link id="Link1" rel="icon" href="/images/favicon.ico" type="image/png" />
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"></meta>
   </head>
   );
 }
@@ -28,23 +29,12 @@ function ExchangeRateTable() {
     "EUR",
     "CNY",
   ]);
+
   currenciesUsed.forEach((c) => {
     console.log("EXCHANGE RATE: " + c);
   });
   const [cookieVals, setCookieVals] = useState([]); // Initialize as an empty array
   const promises = [];
-
-  useEffect(() => {
-    // Read the "CurrenciesUsed" cookie
-    const cookieValue = getCookieValue("CurrenciesUsed");
-   
-    if (cookieValue != null) {
-      // Split the cookie value into an array of currencies
-      console.log("hello");
-      const currencies = cookieValue.split(",");
-      setCurrenciesUsed(currencies);
-    }
-  }, []);
 
   currenciesUsed.forEach((c) => {
     console.log("EXCHANGE RATE after CU cookie: " + c);
@@ -71,22 +61,12 @@ function ExchangeRateTable() {
     console.log("GENERATE TABLE WITH COOKIE");
     const tableBody = document.querySelector("#exchangeRates tbody");
 
-    // Read the "CurrenciesUsed" cookie
     const cookieValueCU = getCookieValue("CurrenciesUsed");
-
-    if (cookieValueCU != null) {
-      // Split the cookie value into an array of currencies
-      const currencies = cookieValueCU.split(",");
-      setCurrenciesUsed(currencies);
-    }
-
-    currenciesUsed.forEach((c) => {
-      console.log("gen table with cook after CU cookie: " + c);
-    });
+    const currencies = cookieValueCU.split(",");
+    
 
     tableBody.innerHTML = ""; // Clear existing table body
     const cookieName = `CurrencyExchange`; // Use a consistent cookie name
-    const updatedCookieVals = [...cookieVals]; // Copy the existing cookieVals array
     const cookieValue = getCookie(cookieName);
 
     // Create the header row with currenciesUsed
@@ -94,37 +74,34 @@ function ExchangeRateTable() {
     const emptyHeader = document.createElement("th"); // Empty cell for the top-left corner
     headerRow.appendChild(emptyHeader);
 
-    currenciesUsed.forEach((toCurrency) => {
+    currencies.forEach((toCurrency) => {
       const tableHeader = document.createElement("th");
       tableHeader.textContent = toCurrency;
       headerRow.appendChild(tableHeader);
     });
 
     tableBody.appendChild(headerRow);
-
-    currenciesUsed.forEach((fromCurrency) => {
+    const values = cookieValue.split(",");
+    currencies.forEach((fromCurrency) => {
       const tableRow = document.createElement("tr");
       const tableHeader = document.createElement("th");
       tableHeader.textContent = fromCurrency;
       tableRow.appendChild(tableHeader);
-      currenciesUsed.forEach((toCurrency) => {
-        if (
-          cookieValue !== null &&
-          cookieValue.split(",").length ==
-            currenciesUsed.length * currenciesUsed.length
-        ) {
+      currencies.forEach((toCurrency) => {
           const tableData = document.createElement("td");
-          const values = cookieValue.split(",");
-
-          const number = parseFloat(values[i]); // Convert to a number
+                   
+          var symbol = values[i].split(/\d/)[0];
+          var val = values[i].split(/^ *[^\d]+/)[1]; // Convert to a number
+          console.log("symbol====" + symbol);
+          console.log("VALUE====" + val);
+          const number = parseFloat(val);
           const roundedDec = number.toFixed(2);
 
-          tableData.textContent = roundedDec.toString();
+          tableData.textContent = symbol + roundedDec.toString();
           console.log(
             "Adding table data: " + values[i] + " i = " + i.toString()
           );
           tableRow.appendChild(tableData);
-        }
         i++;
       });
       tableBody.appendChild(tableRow);
@@ -141,18 +118,7 @@ function ExchangeRateTable() {
     const cookieName = `CurrencyExchange`; // Use a consistent cookie name
     const updatedCookieVals = []; // Copy the existing cookieVals array
     const requests = [];
-    // Read the "CurrenciesUsed" cookie
-    const cookieValueCU = getCookieValue("CurrenciesUsed");
 
-    if (cookieValueCU != null) {
-      // Split the cookie value into an array of currencies
-      const currencies = cookieValueCU.split(",");
-      console.log(currencies[-1]);
-    }
-
-    currenciesUsed.forEach((c) => {
-      console.log("gen table with cook after CU cookie: " + c);
-    });
     currenciesUsed.forEach((fromCurrency, fromIndex) => {
       currenciesUsed.forEach((toCurrency, toIndex) => {
         const request = fetch(
@@ -160,7 +126,14 @@ function ExchangeRateTable() {
         )
           .then((response) => response.json())
           .then((data) => {
-            const result = data.result;
+            var result = data.result;   
+            console.log("RESULT  B4 = " + result);                   
+            var symbol = data.result.split(/\d/)[0];
+            var val = data.result.split(/^ *[^\d]+/)[1]; // Convert to a number
+            val = parseFloat(val);
+            val = val.toFixed(2);
+            result = symbol + val;
+            console.log("RESULT = " + result);
             dataMatrix[fromIndex][toIndex] = result;
             return result;
           })
@@ -174,7 +147,7 @@ function ExchangeRateTable() {
         requests.push(request);
       });
     });
-
+    
     Promise.all(requests).then(() => {
       // Create the header row with currenciesUsed
       const headerRow = document.createElement("tr");
@@ -197,10 +170,16 @@ function ExchangeRateTable() {
 
         rowData.forEach((cellData) => {
           const tableData = document.createElement("td");
-          const number = parseFloat(cellData); // Convert to a number
+          var symbol = cellData.split(/\d/)[0];
+          var val = cellData.split(/^ *[^\d]+/)[1]; // Convert to a number
+          console.log("symbol====" + symbol);
+          console.log("VALUE====" + val);
+          const number = parseFloat(val);
           const roundedDec = number.toFixed(2);
+          
+          tableData.textContent = symbol + roundedDec.toString();
 
-          tableData.textContent = roundedDec.toString();
+        //  tableData.textContent = cellData;
           tableRow.appendChild(tableData);
           updatedCookieVals.push(cellData);
         });
@@ -219,21 +198,27 @@ function ExchangeRateTable() {
   const cookieName = `CurrencyExchange`;
   const cookieValue = getCookie(cookieName);
 
-  if (
-    cookieValue !== null &&
+  const cookieName2 = `CurrenciesUsed`;
+  const cookieValue2 = getCookie(cookieName2);
+
+  if (cookieValue !== null &&
     cookieValue.split(",").length ===
-      currenciesUsed.length * currenciesUsed.length
-  ) {
+      currenciesUsed.length * currenciesUsed.length) {
     document.addEventListener("DOMContentLoaded", function () {
+      console.log("generate table with cookie 1");
       generateTableWithCookie();
     });
-  } else {
+  }
+  else if (cookieValue2 !== null && cookieValue2.split(',').length > 5) {
     document.addEventListener("DOMContentLoaded", function () {
+      generateTableWithCookie();
+      console.log("generate table with cookie 2");
+    });
+  }
+  else {
+    document.addEventListener("DOMContentLoaded", function () {
+      console.log("generate table with cookie 3");
       generateTableWithoutCookie();
-      var currUsed = getCookie("CurrenciesUsed");
-      if (currUsed == null) {
-        createAndSetCookie(currenciesUsed);
-      }
     });
   }
 
@@ -278,14 +263,23 @@ function ExchangeRateTable() {
 
   function UpdateExchangeRateTable(newCurrency) {
     var currencies = currenciesUsed;
-    currencies.push(newCurrency);
-    setCurrenciesUsed(currencies);
+    var found = false;
+    currencies.forEach((c) => {
+      if(c == newCurrency){
+        found = true;
+      }
+    })
+    if(!found){
+      currencies.push(newCurrency);
+      setCurrenciesUsed(currencies);
+  
+      currenciesUsed.forEach((c) => {
+        console.log("Update table: " + c);
+      });
+      createAndSetCookie(currenciesUsed);
+      generateTableWithoutCookie();
+    }
 
-    currenciesUsed.forEach((c) => {
-      console.log("Update table: " + c);
-    });
-    createAndSetCookie(currenciesUsed);
-    generateTableWithoutCookie();
   }
 
   function setCurrencyInCookie(currencies) {
@@ -310,8 +304,6 @@ function ExchangeRateTable() {
     const [newCurrency, setNewCurrency] = useState("JPY");
 
     const HandleAddClick = () => {
-      const updatedCurrencies = [...currenciesUsed, newCurrency.toUpperCase()];
-      setCurrenciesUsed(updatedCurrencies);
       UpdateExchangeRateTable(newCurrency.toUpperCase());
     };
 
@@ -363,7 +355,7 @@ function ExchangeRateTable() {
   return (
     <span className="cardER" id="cardER">
       <AddCurrencyDropdown />
-      <p id="latestPull">Exchange Rates as per latest pull.</p>
+      <p id="latestPull">Exchange Rates as per 10/16/2023</p>
       <table id="exchangeRates">
         <thead>
           <tr></tr>
@@ -508,6 +500,7 @@ function ConverterForm() {
             responseData = responseDataArray.join(',');
           }
         }
+        responseData = responseData.substring(1);
         console.log("AFTER: " + responseData);
   
         // Set the updated data back into the cookie
@@ -579,7 +572,7 @@ function ConverterForm() {
         <input type="text" id="inputAmount" name="amount" placeholder="00.00"  value={amount}
         onInput={(e) => setAmount(e.target.value)} onChange={(e) => handleInputChange(e.target.value)} />
         <div id="inputsDiv">
-          <label htmlFor="inputFrom" className="centerLabel">From:</label>
+          <label htmlFor="inputFrom" className="centerLabel">From:</label>  
           <select  value={fromCurrency} onChange={(e) => setFromCurrency(e.target.value)} id="inputFrom" name="from" className="inputs" >
             <option value="CAD" selected="selected">CAD</option>
             <option value="USD">USD</option>
@@ -588,6 +581,7 @@ function ConverterForm() {
             <option value="CNY">CNY</option>
             {/* Add more options as needed */}
           </select>
+          <img src="/images/exchange.png" alt="Exchange Image" id="exchangeImg"></img>
           <label htmlFor="inputTo" className="centerLabel">To:</label>
           <select value={toCurrency} onChange={(e) => setToCurrency(e.target.value)} id="inputTo" className="inputs" name="to">
             <option value="CAD">CAD</option>
@@ -647,14 +641,14 @@ function Footer() {
 
 function App() {
   return (
-    <div id="alphaDiv">
-    <Head />
-    <Header />
-    <ConverterForm />
-      <div className="content2">
-        <ExchangeRateTable />
-      </div>
-    <Footer />
+  <div id="alphaDiv">
+      <Head />
+      <Header />
+      <ConverterForm />
+        <div className="content2">
+          <ExchangeRateTable />
+        </div>
+      <Footer />
   </div>
   );
 }
