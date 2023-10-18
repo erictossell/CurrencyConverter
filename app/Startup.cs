@@ -61,9 +61,9 @@ namespace CurrencyConverter
             {
                 options.AddDefaultPolicy(builder =>
                 {
-                    builder.AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader();
+                    builder.WithOrigins("https://davidwagner-currencyconverter.up.railway.app/") // Add the domain of your web page/application
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
                 });
             });           
         }
