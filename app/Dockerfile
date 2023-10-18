@@ -15,20 +15,9 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # Build the React frontend
-WORKDIR /app/client
+WORKDIR /currency_converter
 RUN npm install
 RUN npm run build
-
-# Build runtime image
-FROM mcr.microsoft.com/dotnet/5.0-aspnet AS runtime
-WORKDIR /app
-COPY --from=build /app/out .   
-# Copy the .NET application
-COPY --from=build /app/client/build ./client/build   
-# Copy the React build
-
-# Copy your SQLite database to the appropriate location
-COPY your-sqlite-database.db /app/your-sqlite-database.db
 
 
 # Final stage/image
