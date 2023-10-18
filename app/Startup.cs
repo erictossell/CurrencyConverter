@@ -70,7 +70,7 @@ namespace CurrencyConverter
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            var indexFilePath = "/currency_converter/public/index.html"; // Path to your index.html
+            var indexFilePath = "./currency_converter/public/index.html"; // Path to your index.html
 
             if (env.IsDevelopment())
             {
