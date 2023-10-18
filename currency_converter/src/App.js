@@ -395,6 +395,7 @@ function ConverterForm() {
   };
 
 
+
   // Add an event listener to listen for changes to the cookie
   useEffect(() => {
     const handleCookieChange = (event) => {
@@ -496,6 +497,7 @@ function ConverterForm() {
         console.log("Cookie:", document.cookie);
         console.log("new data added:", responseData);
         console.log('Conversion saved');
+        handleCookieChange();
       })
       .catch(error => {
         // Error making the request
