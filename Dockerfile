@@ -28,4 +28,9 @@ WORKDIR /app
 COPY --from=dotnet-build /app/publish .
 COPY --from=react-build /app/client/build ./wwwroot
 
+# Copy the SQLite database file
+COPY TestDatabase.db ./   
+# This line copies TestDatabase.db to the root of the image
+
+
 ENTRYPOINT ["dotnet", "CurrencyConverter.dll"]
