@@ -394,19 +394,6 @@ function ConverterForm() {
     }
   };
 
-
-
-  // Add an event listener to listen for changes to the cookie
-  useEffect(() => {
-    const handleCookieChange = (event) => {
-      // Check if the event key is "ConversionHistory"
-      if (event.key === 'ConversionHistory') {
-        // Handle the change to the cookie
-        console.log("Fetching conv history...");
-        fetchData();
-      }
-    }
-
     window.addEventListener('storage', handleCookieChange);
 
     return () => {
