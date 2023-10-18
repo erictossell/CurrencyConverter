@@ -60,7 +60,7 @@ function ExchangeRateTable() {
     var i = 0;
     console.log("GENERATE TABLE WITH COOKIE");
     const tableBody = document.querySelector("#exchangeRates tbody");
-    const currencies = currenciesUsed;
+    let currencies = currenciesUsed;
     const cookieValueCU = getCookieValue("CurrenciesUsed");
     if(cookieValueCU !== null && cookieValueCU !== undefined){
       currencies = cookieValueCU.split(",");
@@ -540,7 +540,7 @@ function ConverterForm() {
   return (
       <span className="card">
         <div><h2>Conversion Widget:</h2></div>
-        <label htmlFor="inputAmount">Amount:</label>
+        <label htmlFor="inputAmount"  id="inputAmountLbl">Amount:</label>
         <input type="text" id="inputAmount" name="amount" placeholder="00.00"  value={amount}
         onInput={(e) => setAmount(e.target.value)} onChange={(e) => handleInputChange(e.target.value)} />
         <div id="inputsDiv">
@@ -603,9 +603,6 @@ function Footer() {
             <a href="https://www.linkedin.com/in/david-karl-wagner/">
               <img src="/images/LinkedIn-Mark.PNG" alt="LinkedIn" width="20" height="20" style={{ verticalAlign: 'middle', paddingLeft: '25px' }} /> My LinkedIn
             </a>
-      </p>
-       <p>
-          Exchange Rates pulled from <a href="https://freecurrencyapi.com/">Free Currency API</a>
       </p>
     </footer>
   );
