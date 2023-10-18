@@ -1,23 +1,31 @@
-# Stage 1: Build the .NET and React application
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+# Stage 1: Build the React frontend
+FROM node:14 AS react-build
+WORKDIR /app/client
+
+# Copy the React app source code
+COPY currency_converter/package.json currency_converter/package-lock.json ./
+RUN npm install
+
+# Copy the rest of the React app files
+COPY currency_converter/ ./
+RUN npm run build
+
+# Stage 2: Build the .NET Core application
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS dotnet-build
 WORKDIR /app
 
-# Copy and restore .NET dependencies
-COPY /app/CurrencyConverter.csproj .
+# Copy and restore .NET Core dependencies
+COPY app/*.csproj ./
 RUN dotnet restore
 
 # Copy the rest of the application and build
-COPY /app .
+COPY app/ ./
 RUN dotnet publish -c Release -o /app/publish
 
-# Build the React frontend
-WORKDIR /app/client
-RUN apt-get update && apt-get install -y nodejs npm
-RUN npm install
-RUN npm run build
-
-# Stage 2: Create the final image
-FROM mcr.microsoft.com/dotnet/aspnet:6.0
+# Stage 3: Create the final image
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS final
 WORKDIR /app
-COPY --from=build /app/publish .
+COPY --from=dotnet-build /app/publish .
+COPY --from=react-build /app/client/build ./wwwroot
+
 ENTRYPOINT ["dotnet", "CurrencyConverter.dll"]
