@@ -460,7 +460,7 @@ function ConverterForm() {
         }
         else{
           if (responseData.split(',').length <= 16) {
-            if(respondeData == ""){
+            if(responseData == ""){
               responseData = data.result;
             }
             else{
