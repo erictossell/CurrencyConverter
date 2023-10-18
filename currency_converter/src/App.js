@@ -60,9 +60,12 @@ function ExchangeRateTable() {
     var i = 0;
     console.log("GENERATE TABLE WITH COOKIE");
     const tableBody = document.querySelector("#exchangeRates tbody");
-
+    const currencies = currenciesUsed;
     const cookieValueCU = getCookieValue("CurrenciesUsed");
-    const currencies = cookieValueCU.split(",");
+    if(cookieValueCU === null  || cookieValueCU === undefined){
+      currencies = cookieValueCU.split(",");
+    }
+    
     
 
     tableBody.innerHTML = ""; // Clear existing table body
@@ -394,13 +397,6 @@ function ConverterForm() {
     }
   };
 
-    window.addEventListener('storage', handleCookieChange);
-
-    return () => {
-      // Remove the event listener when the component unmounts
-      window.removeEventListener('storage', handleCookieChange);
-    };
-  }, []); 
 
   const [amount, setAmount] = useState('');
   const [fromCurrency, setFromCurrency] = useState('CAD');
