@@ -1,30 +1,22 @@
-# Learn about building .NET container images:
-# https://github.com/dotnet/dotnet-docker/blob/main/samples/README.md
+# Stage 1: Build the .NET and React application
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /app
 
-# Copy everything else and build the app
-COPY CurrencyConverter.csproj .
-COPY . .
+# Copy and restore .NET dependencies
+COPY /app/CurrencyConverter.csproj .
+RUN dotnet restore
+
+# Copy the rest of the application and build
+COPY /app .
 RUN dotnet publish -c Release -o /app/publish
 
-# Add the necessary .NET runtime files
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        libc6 \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install Node.js and npm (assuming you are using a Debian-based image)
 # Build the React frontend
-WORKDIR /currency_converter
-
+WORKDIR /app/client
 RUN apt-get update && apt-get install -y nodejs npm
-
 RUN npm install
 RUN npm run build
 
-
-# Final stage/image
+# Stage 2: Create the final image
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /app
 COPY --from=build /app/publish .
