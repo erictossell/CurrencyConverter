@@ -9,6 +9,9 @@ COPY . .
 RUN dotnet publish -c Release -o /app/publish
 
 # Install Node.js and npm (assuming you are using a Debian-based image)
+# Build the React frontend
+WORKDIR /currency_converter
+
 RUN apt-get update && apt-get install -y nodejs npm
 
 # Add the necessary .NET runtime files
@@ -17,8 +20,7 @@ RUN apt-get update \
         libc6 \
     && rm -rf /var/lib/apt/lists/*
 
-# Build the React frontend
-WORKDIR /currency_converter
+
 RUN npm install
 RUN npm run build
 
