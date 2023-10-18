@@ -1,2 +1,2 @@
 env:
-  INDEX: /wwwroot/index.html
+  INDEX: /currency_converter/public/index.html
