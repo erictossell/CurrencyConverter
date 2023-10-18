@@ -357,7 +357,6 @@ function ExchangeRateTable() {
   return (
     <span className="cardER" id="cardER">
       <AddCurrencyDropdown />
-      <p id="latestPull">Exchange Rates as per 10/16/2023</p>
       <table id="exchangeRates">
         <thead>
           <tr></tr>
@@ -590,7 +589,6 @@ function ConverterForm() {
             </tr>))}
           </tbody>
         </table>
-        <p id="smallText">(Last Five Conversions)</p>
       </span>
   );
 }
