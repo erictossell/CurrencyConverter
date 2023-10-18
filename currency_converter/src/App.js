@@ -497,7 +497,7 @@ function ConverterForm() {
         console.log("Cookie:", document.cookie);
         console.log("new data added:", responseData);
         console.log('Conversion saved');
-        handleCookieChange();
+        fetchData();
       })
       .catch(error => {
         // Error making the request
