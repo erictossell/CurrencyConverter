@@ -373,40 +373,27 @@ function ExchangeRateTable() {
 function ConverterForm() {
   const [formData, setFormData] = useState([]);
 
-  // // Define the fetchData function
-  // const fetchData = () => {
-  //   const cookieValue = Cookies.get('ConversionHistory');
-  //   console.log(cookieValue);
-  //   if (cookieValue) {
-  //     const cookieDataArray = cookieValue.split(',');
+  // Define the fetchData function
+  const fetchData = () => {
+    const cookieValue = Cookies.get('ConversionHistory');
+    console.log(cookieValue);
+    if (cookieValue) {
+      const cookieDataArray = cookieValue.split(',');
 
-  //     const mappedData = [];
-  //     for (let i = 0; i < cookieDataArray.length; i += 4) {
-  //       const dataObject = {
-  //         amount: cookieDataArray[i],
-  //         from: cookieDataArray[i + 1],
-  //         to: cookieDataArray[i + 2],
-  //         result: cookieDataArray[i + 3]
-  //       };
-  //       mappedData.push(dataObject);
-  //     }
-  //     setFormData(mappedData);
-  //   }
-  // };
+      const mappedData = [];
+      for (let i = 0; i < cookieDataArray.length; i += 4) {
+        const dataObject = {
+          amount: cookieDataArray[i],
+          from: cookieDataArray[i + 1],
+          to: cookieDataArray[i + 2],
+          result: cookieDataArray[i + 3]
+        };
+        mappedData.push(dataObject);
+      }
+      setFormData(mappedData);
+    }
+  };
 
-
-  // Use the useEffect hook to call fetchData when the component mounts
-  useEffect(() => {
-    fetchData(); // Initial data fetch
-
-    const intervalId = setInterval(() => {
-      fetchData(); // Periodically check for changes
-    }, 1000); // Adjust the interval as needed (e.g., check every 10 seconds)
-
-    return () => {
-      clearInterval(intervalId); // Clear the interval when the component is unmounted
-    };
-  }, []);
 
   // Add an event listener to listen for changes to the cookie
   useEffect(() => {
