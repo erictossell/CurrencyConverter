@@ -62,7 +62,7 @@ function ExchangeRateTable() {
     const tableBody = document.querySelector("#exchangeRates tbody");
     const currencies = currenciesUsed;
     const cookieValueCU = getCookieValue("CurrenciesUsed");
-    if(cookieValueCU !== null  || cookieValueCU !== undefined){
+    if(cookieValueCU !== null && cookieValueCU !== undefined){
       currencies = cookieValueCU.split(",");
     }
     
