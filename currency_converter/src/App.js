@@ -460,13 +460,7 @@ function ConverterForm() {
         }
         else{
           if (responseData.split(',').length <= 16) {
-            if(responseData == ""){
-              responseData = data.result;
-            }
-            else{
-              responseData += "," + data.result;
-            }
-           
+            responseData = data.result;
             console.log("UNDER 20");
           } else {
             console.log("ABOVE 20 SPLIT length: " + responseData.split(',').length.toString());
