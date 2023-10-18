@@ -206,22 +206,37 @@ function ExchangeRateTable() {
   if (cookieValue !== null &&
     cookieValue.split(",").length ===
       currenciesUsed.length * currenciesUsed.length) {
-    document.addEventListener("DOMContentLoaded", function () {
-      console.log("generate table with cookie 1");
+      if (document.readyState === 'loading') {
+         document.addEventListener("DOMContentLoaded", function () {
+         console.log("generate table with cookie 1");
+          generateTableWithCookie();
+      });
+    }
+    else{
       generateTableWithCookie();
-    });
+    }
   }
   else if (cookieValue2 !== null && cookieValue2.split(',').length > 5) {
-    document.addEventListener("DOMContentLoaded", function () {
-      generateTableWithCookie();
+    if (document.readyState === 'loading') {
+      document.addEventListener("DOMContentLoaded", function () {
       console.log("generate table with cookie 2");
-    });
+       generateTableWithCookie();
+   });
+ }
+ else{
+   generateTableWithCookie();
+ }
   }
   else {
-    document.addEventListener("DOMContentLoaded", function () {
-      console.log("generate table with cookie 3");
-      generateTableWithoutCookie();
-    });
+    if (document.readyState === 'loading') {
+      document.addEventListener("DOMContentLoaded", function () {
+      console.log("generate table without cookie 3");
+       generateTableWithoutCookie();
+   });
+ }
+ else{
+  generateTableWithoutCookie();
+ }
   }
 
   function createAndSetCookie(currencies) {
