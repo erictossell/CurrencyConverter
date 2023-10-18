@@ -29,7 +29,9 @@ function ExchangeRateTable() {
     "EUR",
     "CNY",
   ]);
+  document.addEventListener("DOMContentLoaded", function () {
   UpdateExchangeRateTable("JPY");
+  });
   currenciesUsed.forEach((c) => {
     console.log("EXCHANGE RATE: " + c);
   });
