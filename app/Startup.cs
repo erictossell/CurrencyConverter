@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Cors;
 using System.Data.SQLite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 
 namespace CurrencyConverter
 {
@@ -75,7 +76,11 @@ namespace CurrencyConverter
             }
             app.UseCors(); 
             app.UseStaticFiles();
-            app.UseDefaultFiles();
+            app.UseDefaultFiles(new DefaultFilesOptions
+            {
+                DefaultFileNames = new List<string> { "index.html" },
+                FileProvider = new PhysicalFileProvider("./currency_converter/public")
+            });
             app.UseRouting();
 
             app.UseAuthorization();
