@@ -9,8 +9,8 @@ body {
   padding: 0;
   text-align: center;
   width:25%;
-  height:100%;
-  margin-left:35%;
+  height:95%;
+  margin-left:33%;
 }
 
 @media screen and (max-width: 600px) {
@@ -26,6 +26,8 @@ body {
     height:100%;
   }
 }
+
+
 header{
   top: 0;
   left: 0;
@@ -34,16 +36,6 @@ header{
   color: white;
   text-align: center;
 }
-
-@media screen and (max-width: 600px) {
-header{
-  top: 0;
-  left: 0;
-  width: 100%;
-  background-color: #4CAF50;
-  color: white;
-  text-align: center;
-}}
 
 h1 {
   background: linear-gradient(135deg, #195905, #000);

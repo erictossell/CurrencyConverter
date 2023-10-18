@@ -393,7 +393,7 @@ function ConverterForm() {
         };
         mappedData.push(dataObject);
       }
-      setFormData(mappedData);
+      //setFormData(mappedData);
     }
   };
 
