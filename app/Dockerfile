@@ -8,6 +8,9 @@ COPY CurrencyConverter.csproj .
 COPY . .
 RUN dotnet publish -c Release -o /app/publish
 
+# Install Node.js and npm (assuming you are using a Debian-based image)
+RUN apt-get update && apt-get install -y nodejs npm
+
 # Add the necessary .NET runtime files
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
