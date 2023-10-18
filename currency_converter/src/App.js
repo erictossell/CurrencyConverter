@@ -29,9 +29,6 @@ function ExchangeRateTable() {
     "EUR",
     "CNY",
   ]);
-  document.addEventListener("DOMContentLoaded", function () {
-  UpdateExchangeRateTable("JPY");
-  });
   currenciesUsed.forEach((c) => {
     console.log("EXCHANGE RATE: " + c);
   });
@@ -547,7 +544,6 @@ function ConverterForm() {
 
   return (
       <span className="card">
-        <div><h2>Conversion Widget:</h2></div>
         <label htmlFor="inputAmount"  id="inputAmountLbl">Amount:</label>
         <input type="text" id="inputAmount" name="amount" placeholder="00.00"  value={amount}
         onInput={(e) => setAmount(e.target.value)} onChange={(e) => handleInputChange(e.target.value)} />
