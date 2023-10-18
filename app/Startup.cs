@@ -70,19 +70,12 @@ namespace CurrencyConverter
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            var indexFilePath = "/app/wwwroot/index.html"; // Path to your index.html
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
             app.UseCors(); 
-            app.UseStaticFiles();
-            app.UseDefaultFiles(new DefaultFilesOptions
-            {
-                DefaultFileNames = new List<string> { "index.html" },
-                FileProvider = new PhysicalFileProvider(Path.GetDirectoryName(indexFilePath))
-            });
+            app.UseFileServer();
             app.UseRouting();
 
             app.UseAuthorization();
