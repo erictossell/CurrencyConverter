@@ -29,7 +29,7 @@ function ExchangeRateTable() {
     "EUR",
     "CNY",
   ]);
-
+  UpdateExchangeRateTable("JPY");
   currenciesUsed.forEach((c) => {
     console.log("EXCHANGE RATE: " + c);
   });
@@ -382,7 +382,7 @@ function ConverterForm() {
 
     // You can also provide a dependency array to control when this effect runs
   }, [formData]);
-  
+
   // Define the fetchData function
   const fetchData = () => {
     const cookieValue = Cookies.get('ConversionHistory');
