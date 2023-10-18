@@ -122,7 +122,7 @@ function ExchangeRateTable() {
     currenciesUsed.forEach((fromCurrency, fromIndex) => {
       currenciesUsed.forEach((toCurrency, toIndex) => {
         const request = fetch(
-          `http://localhost:5000/generateExchangeRates?from=${fromCurrency}&to=${toCurrency}`
+          `https://davidwagner-currencyconverter.up.railway.app/generateExchangeRates?from=${fromCurrency}&to=${toCurrency}`
         )
           .then((response) => response.json())
           .then((data) => {
@@ -461,7 +461,7 @@ function ConverterForm() {
 
   const saveConversionHistory = (amount, fromCurrency, toCurrency, outputResult) => {
     // Send a POST request to the controller endpoint
-    fetch(`http://localhost:5000/convertHistory?amount=${amount}&from=${fromCurrency}&to=${toCurrency}&result=${outputResult}&addRow=True`)
+    fetch(`https://davidwagner-currencyconverter.up.railway.app/convertHistory?amount=${amount}&from=${fromCurrency}&to=${toCurrency}&result=${outputResult}&addRow=True`)
       .then(response => response.json())
       .then(data => {
 
@@ -538,7 +538,7 @@ function ConverterForm() {
       setOutputResult(newErrorMsg);
     } else {
       // Make an HTTP request to the server-side endpoint
-      fetch(`http://localhost:5000/api/convert?amount=${parsedAmount}&from=${fromCurrency}&to=${toCurrency}`)
+      fetch(`https://davidwagner-currencyconverter.up.railway.app/api/convert?amount=${parsedAmount}&from=${fromCurrency}&to=${toCurrency}`)
         .then((response) =>  response.json())
         .then((data) => {        
           console.log("SPLIT: " + data.result.split(/[^0-9.]+/)[1]);;
