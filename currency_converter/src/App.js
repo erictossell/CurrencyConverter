@@ -376,6 +376,13 @@ function ExchangeRateTable() {
 function ConverterForm() {
   const [formData, setFormData] = useState([]);
 
+  useEffect(() => {
+    // Call your fetchData function here
+    fetchData();
+
+    // You can also provide a dependency array to control when this effect runs
+  }, [formData]);
+  
   // Define the fetchData function
   const fetchData = () => {
     const cookieValue = Cookies.get('ConversionHistory');
