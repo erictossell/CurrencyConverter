@@ -49,7 +49,7 @@ namespace CurrencyConverter
         {            
             services.AddDbContext<YourDbContext>(options =>
             {
-                options.UseSqlite("Data Source = C:\\Users\\David\\Programming\\CurrencyConverter\\TestDatabase.db");
+                options.UseSqlite("Data Source=/app/publish/currencyExchanges.db");
                 options.EnableSensitiveDataLogging(); 
            
             });
