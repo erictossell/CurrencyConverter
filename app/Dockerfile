@@ -24,5 +24,4 @@ RUN npm run build
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /app
 COPY --from=build /app/publish .
-COPY wwwroot /app/wwwroot
 ENTRYPOINT ["dotnet", "CurrencyConverter.dll"]
