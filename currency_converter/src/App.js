@@ -460,7 +460,13 @@ function ConverterForm() {
         }
         else{
           if (responseData.split(',').length <= 16) {
-            responseData += "," + data.result;
+            if(respondeData == ""){
+              responseData = data.result;
+            }
+            else{
+              responseData += "," + data.result;
+            }
+           
             console.log("UNDER 20");
           } else {
             console.log("ABOVE 20 SPLIT length: " + responseData.split(',').length.toString());
@@ -471,7 +477,6 @@ function ConverterForm() {
             responseData = responseDataArray.join(',');
           }
         }
-        responseData = responseData.substring(1);
         console.log("AFTER: " + responseData);
   
         // Set the updated data back into the cookie
