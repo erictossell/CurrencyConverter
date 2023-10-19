@@ -1,5 +1,6 @@
 import React, { useState, useEffect} from 'react';
 import Cookies from 'js-cookie';
+import config from './config';
 
 
 
@@ -21,7 +22,10 @@ function Header() {
     </header>
   );
 }
+
 function ExchangeRateTable() {
+  const apiUrl = process.env.NODE_ENV === 'production' ? config.production.apiUrl : config.development.apiUrl;
+
   const [currenciesUsed, setCurrenciesUsed] = useState([
     "CAD",
     "USD",
@@ -130,7 +134,7 @@ function ExchangeRateTable() {
     currenciesUsed.forEach((fromCurrency, fromIndex) => {
       currenciesUsed.forEach((toCurrency, toIndex) => {
         const request = fetch(
-          `https://davidwagner-currencyconverter.up.railway.app/generateExchangeRates?from=${fromCurrency}&to=${toCurrency}`
+          `${apiUrl}/generateExchangeRates?from=${fromCurrency}&to=${toCurrency}`
         )
           .then((response) => response.json())
           .then((data) => {
@@ -373,11 +377,8 @@ function ExchangeRateTable() {
   );
 }
 
-
- 
-
-
 function ConverterForm() {
+  const apiUrl = process.env.NODE_ENV === 'production' ? config.production.apiUrl : config.development.apiUrl;
   const [formData, setFormData] = useState([]);
 
   useEffect(() => {
@@ -443,7 +444,7 @@ function ConverterForm() {
 
   const saveConversionHistory = (amount, fromCurrency, toCurrency, outputResult) => {
     // Send a POST request to the controller endpoint
-    fetch(`https://davidwagner-currencyconverter.up.railway.app/convertHistory?amount=${amount}&from=${fromCurrency}&to=${toCurrency}&result=${outputResult}&addRow=True`)
+    fetch(`${apiUrl}/convertHistory?amount=${amount}&from=${fromCurrency}&to=${toCurrency}&result=${outputResult}&addRow=True`)
       .then(response => response.json())
       .then(data => {
 
@@ -520,7 +521,7 @@ function ConverterForm() {
       setOutputResult(newErrorMsg);
     } else {
       // Make an HTTP request to the server-side endpoint
-      fetch(`https://davidwagner-currencyconverter.up.railway.app/api/convert?amount=${parsedAmount}&from=${fromCurrency}&to=${toCurrency}`)
+      fetch(`${apiUrl}/api/convert?amount=${parsedAmount}&from=${fromCurrency}&to=${toCurrency}`)
         .then((response) =>  response.json())
         .then((data) => {        
           console.log("SPLIT: " + data.result.split(/[^0-9.]+/)[1]);;
