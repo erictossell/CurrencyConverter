@@ -39,6 +39,12 @@ function ExchangeRateTable() {
     console.log("EXCHANGE RATE after CU cookie: " + c);
   });
 
+  useEffect(() => {
+    // Call UpdateExchangeRateTable when the component is mounted
+    UpdateExchangeRateTable(newCurrency.toUpperCase());
+  }, []); // The empty dependency array ensures this runs only once on mount
+
+
   const dataMatrix = Array(currenciesUsed.length)
     .fill(null)
     .map(() => Array(currenciesUsed.length).fill(null));
