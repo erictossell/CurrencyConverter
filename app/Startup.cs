@@ -41,7 +41,7 @@ namespace CurrencyConverter
         private static void InsertData()
         {
             string databasePath = "currencyExchanges.db"; // Replace with the path to your SQLite database
-            string sqlFilePath = "../insert.sql"; // Replace with the path to your SQL file
+            string sqlFilePath = "insert.sql"; // Replace with the path to your SQL file
             
             // Read the SQL commands from the file
             

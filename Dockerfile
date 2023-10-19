@@ -28,6 +28,9 @@ WORKDIR /app
 COPY --from=dotnet-build /app/publish .
 COPY --from=react-build /app/client/build ./wwwroot
 
+# Copy the SQLite cransaction file
+COPY insert.sql /app/publish/insert.sql   
+
 # Copy the SQLite database file
 COPY /app/currencyExchanges.db /app/publish/currencyExchanges.db   
  
