@@ -41,7 +41,7 @@ function ExchangeRateTable() {
 
   useEffect(() => {
     // Call UpdateExchangeRateTable when the component is mounted
-    UpdateExchangeRateTable(newCurrency.toUpperCase());
+    UpdateExchangeRateTable("JPY");
   }, []); // The empty dependency array ensures this runs only once on mount
 
 
