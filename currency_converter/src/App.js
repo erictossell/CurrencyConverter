@@ -104,8 +104,6 @@ function ExchangeRateTable() {
                    
           var symbol = values[i].split(/\d/)[0];
           var val = values[i].split(/^ *[^\d]+/)[1]; // Convert to a number
-          console.log("symbol====" + symbol);
-          console.log("VALUE====" + val);
           const number = parseFloat(val);
           const roundedDec = number.toFixed(2);
 
@@ -184,7 +182,6 @@ function ExchangeRateTable() {
           const tableData = document.createElement("td");
           var symbol = cellData.split(/\d/)[0];
           var val = cellData.split(/^ *[^\d]+/)[1]; // Convert to a number
-          console.log("symbol====" + symbol);
           console.log("VALUE====" + val);
           const number = parseFloat(val);
           const roundedDec = number.toFixed(2);
@@ -386,7 +383,7 @@ function ConverterForm() {
     fetchData();
 
     // You can also provide a dependency array to control when this effect runs
-  }, [formData]);
+  }, []);
 
   // Define the fetchData function
   const fetchData = () => {
@@ -415,7 +412,6 @@ function ConverterForm() {
   const [toCurrency, setToCurrency] = useState('USD');
   const [errorMsg, setErrorMsg] = useState('');
   const [outputResult, setOutputResult] = useState('00.00');
-
   const handleInputChange = (inputValue) => {
       // Remove all non-numeric and non-dot characters
   const numericValue = inputValue.replace(/[^0-9.]/g, '');
@@ -431,7 +427,7 @@ function ConverterForm() {
       : `${integerPart}.`;
 
 
-  if (formattedValue === '.') {
+  if (formattedValue === '.' || formattedValue === "") {
     setAmount('');
     return;
   }
@@ -440,63 +436,56 @@ function ConverterForm() {
   // Update the state with the formatted value
   setAmount(formattedValue);
   };
+
+  function getCookieValue(cookieName) {
+    const name = cookieName + "=";
+    const cookies = document.cookie.split(";");
+    for (let i = 0; i < cookies.length; i++) {
+      let cookie = cookies[i].trim();
+      if (cookie.indexOf(name) === 0) {
+        return cookie.substring(name.length, cookie.length);
+      }
+    }
+    return null;
+  }
   
 
-  const saveConversionHistory = (amount, fromCurrency, toCurrency, outputResult) => {
-    // Send a POST request to the controller endpoint
-    fetch(`${apiUrl}/convertHistory?amount=${amount}&from=${fromCurrency}&to=${toCurrency}&result=${outputResult}&addRow=True`)
-      .then(response => response.json())
-      .then(data => {
+  const saveConversionHistory = (amount, fromCurrency, toCurrency, outputResult) => { 
+      console.log("SAVE CONV HISTORY");
+      // Read the existing cookie data
+      var cookieName = "ConversionHistory";
+      var responseData = '';
+      var cookieValue = decodeURIComponent(getCookieValue(cookieName));
+      console.log("COOK: " + cookieValue);
 
-        // Read the existing cookie data
-        var cookieName = "ConversionHistory";
-        var responseData = '';
-  
-        if (document.cookie) {
-          var cookieArray = document.cookie.split(";");
-          for (var i = 0; i < cookieArray.length; i++) {
-            var cookiePair = cookieArray[i].split("=");
-            if (cookiePair[0].trim() === cookieName) {
-              responseData = decodeURIComponent(cookiePair[1]);
-              break;
-            }
+      if (cookieValue !== null && cookieValue !== "null") {
+          responseData = cookieValue;
+          if (responseData.split(',').length == 20) {
+              var responseArray = responseData.split(',');
+             // Take the next 4 elements from the end of the array
+                        // Remove the last 4 elements
+              responseArray.splice(-4);
+
+              // Add the variables to the beginning
+              responseArray.unshift(amount, fromCurrency, toCurrency, outputResult);
+
+              // Join the modified array back into a string
+              responseData = responseArray.join(',');
           }
-        } 
-        
-        //create if doesnt exist
-        console.log("DATA.RESULT: " + data.result);
-        console.log("BEFORE: " + responseData);
-        if(data.result == null || data.result.length == 0){
-          responseData = data.result;
-          console.log("Data is null??");
+          else{
+              responseData =  cookieValue + `,${amount},${fromCurrency},${toCurrency},${outputResult},`;  
+          }
+    
         }
         else{
-          if (responseData.split(',').length <= 16) {
-            responseData = data.result;
-            console.log("UNDER 20");
-          } else {
-            console.log("ABOVE 20 SPLIT length: " + responseData.split(',').length.toString());
-            var responseDataArray = responseData.split(',');
-            responseDataArray.splice(-4);
-            // Append the new data to the existing data
-            responseDataArray.unshift(data.result.split(',')[0], data.result.split(',')[1], data.result.split(',')[2], data.result.split(',')[3]);
-            responseData = responseDataArray.join(',');
-          }
-        }
-        console.log("AFTER: " + responseData);
-  
-        // Set the updated data back into the cookie
-        document.cookie = `${cookieName}=${encodeURIComponent(responseData)}; expires=Thu, 1 Jan 2025 12:00:00 UTC; path=/`;
-  
-        console.log("Cookie:", document.cookie);
-        console.log("new data added:", responseData);
-        console.log('Conversion saved');
-        fetchData();
-      })
-      .catch(error => {
-        // Error making the request
-        console.error('Request error:', error);
-      });
+          responseData =  `${amount},${fromCurrency},${toCurrency},${outputResult},`;  
+      }
+      responseData = responseData.replace(/,$/, ''); // Remove the trailing comma using a regular expression
+
+   
+      // Set the updated data back into the cookie
+    document.cookie = `${cookieName}=${encodeURIComponent(responseData)}; expires=Thu, 1 Jan 2025 12:00:00 UTC; path=/`;  
+    fetchData();
   }
   
 
@@ -520,11 +509,12 @@ function ConverterForm() {
       setErrorMsg(newErrorMsg);
       setOutputResult(newErrorMsg);
     } else {
+      let answerOut = "";
       // Make an HTTP request to the server-side endpoint
       fetch(`${apiUrl}/api/convert?amount=${parsedAmount}&from=${fromCurrency}&to=${toCurrency}`)
-        .then((response) =>  response.json())
-        .then((data) => {        
-          console.log("SPLIT: " + data.result.split(/[^0-9.]+/)[1]);;
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("SPLIT: " + data.result.split(/[^0-9.]+/)[1]);
           let parsedOutput = parseFloat(data.result.split(/[^0-9.]+/)[1]);
           if (!isNaN(parsedOutput)) {
             parsedOutput = parsedOutput.toFixed(2);
@@ -532,11 +522,23 @@ function ConverterForm() {
             // Handle the case where parsing is not successful
             console.error("Failed to parse the value.");
           }
-          setOutputResult(parsedOutput);
-          console.log(parsedOutput)     
+          answerOut = parsedOutput;
+          console.log(parsedOutput);
           document.getElementById('outputResult').style.color = 'green';
           document.getElementById('outputResult').style.fontSize = 'big';
-          saveConversionHistory(parsedAmount,fromCurrency,toCurrency,parsedOutput);
+          
+          // Perform a second fetch to get the symbol
+          return fetch(`${apiUrl}/generateExchangeRates?from=${fromCurrency}&to=${toCurrency}`);
+        })
+        .then((symbolResponse) => symbolResponse.json())
+        .then((symbolData) => {
+          var symbol = symbolData.result.split(/\d/)[0]; // Replace 'symbol' with the correct property name
+          console.log(`Symbol: ${symbol}`);      
+          // Use the symbol as needed
+          var fullOuput = symbol + answerOut;
+          setOutputResult(fullOuput);           
+          console.log("save conv history..");
+          saveConversionHistory(parsedAmount, fromCurrency, toCurrency, fullOuput);
         })
         .catch((error) => {
           console.error(error); // Log any errors
@@ -546,12 +548,13 @@ function ConverterForm() {
           document.getElementById('outputResult').style.fontSize = 'small';
         });
     }
+    
   };
 
   return (
       <span className="card">
         <label htmlFor="inputAmount"  id="inputAmountLbl">Amount:</label>
-        <input type="text" id="inputAmount" name="amount" placeholder="00.00"  value={amount}
+        <input type="text" id="inputAmount" name="amount"  value={amount}
         onInput={(e) => setAmount(e.target.value)} onChange={(e) => handleInputChange(e.target.value)} />
         <div id="inputsDiv">
           <label htmlFor="inputFrom" className="centerLabel">From:</label>  

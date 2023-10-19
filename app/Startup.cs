@@ -5,19 +5,21 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Cors;
-using System.Data.SQLite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
+using System.Data.SQLite;
 
 namespace CurrencyConverter
 {
     public class Startup
     {
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment CurrentEnvironment { get; }
 
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            CurrentEnvironment = env;
             string connectionString = @"Data Source=currencyExchanges.db";
             SQLiteConnection liteConn = connectDatabase(connectionString);
             buildDatabase(liteConn);
@@ -31,16 +33,44 @@ namespace CurrencyConverter
 
         private static void buildDatabase(SQLiteConnection connection)
         {
-            using (SQLiteCommand command = new SQLiteCommand("CREATE TABLE IF NOT EXISTS Currencies (ID INTEGER PRIMARY KEY, NAME_CODE TEXT, FULL_NAME TEXT, COUNTRY TEXT, BASE_EXCHANGE_USD INTEGER)", connection))
-            {
-                command.ExecuteNonQuery();
-            }
+       
+            InsertData();
 
-            using (SQLiteCommand command = new SQLiteCommand("CREATE TABLE IF NOT EXISTS Exchanges (ID INTEGER PRIMARY KEY, CURR_A_ID INTEGER, CURR_B_ID INTEGER, EXCHANGE_NAME TEXT, BASE_EXCHANGE_RATE INTEGER)", connection))
-            {
-                command.ExecuteNonQuery();
-            }
+        }
 
+        private static void InsertData()
+        {
+            string databasePath = "currencyExchanges.db"; // Replace with the path to your SQLite database
+            string sqlFilePath = "../insert.sql"; // Replace with the path to your SQL file
+
+        using (SQLiteConnection connection = new SQLiteConnection($"Data Source={databasePath};"))
+        {
+            connection.Open();
+
+            // Read the SQL commands from the file
+            string sqlCommands = File.ReadAllText(sqlFilePath);
+
+            // Split the file content into individual SQL statements
+            string[] commands = sqlCommands.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+          
+                try
+                {
+                    // Execute each SQL command
+                    foreach (string commandText in commands)
+                    {
+                        using (SQLiteCommand command = new SQLiteCommand(commandText, connection))
+                        {
+                            command.ExecuteNonQuery();
+                        }
+                    }
+                    Console.WriteLine("SQL file executed successfully.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error executing SQL file: " + ex.Message);
+                }
+            
+        }
         }
 
 
@@ -49,7 +79,7 @@ namespace CurrencyConverter
         {            
             services.AddDbContext<YourDbContext>(options =>
             {
-                options.UseSqlite("Data Source=/app/publish/currencyExchanges.db");
+                options.UseSqlite("Data Source=currencyExchanges.db");
                 options.EnableSensitiveDataLogging(); 
            
             });
@@ -57,15 +87,15 @@ namespace CurrencyConverter
 
             services.AddControllers();
 
-            services.AddCors(options =>
-            {
-                options.AddDefaultPolicy(builder =>
+             services.AddCors(options =>
                 {
-                    builder.WithOrigins("https://davidwagner-currencyconverter.up.railway.app/") // Add the domain of your web page/application
-                    .AllowAnyHeader()
-                    .AllowAnyMethod();
-                });
-            });           
+                      options.AddDefaultPolicy(builder =>
+                        {
+                            builder.WithOrigins("http://localhost:3000") // Add the domain of your web page/application
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                        });
+            });         
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
