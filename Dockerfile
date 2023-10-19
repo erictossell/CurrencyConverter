@@ -30,6 +30,8 @@ COPY --from=react-build /app/client/build ./wwwroot
 
 # Copy the SQLite database file
 COPY /app/currencyExchanges.db /app/publish/currencyExchanges.db   
+ 
+
 # This line copies TestDatabase.db to the root of the image
 
 

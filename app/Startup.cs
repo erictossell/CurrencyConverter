@@ -42,35 +42,40 @@ namespace CurrencyConverter
         {
             string databasePath = "currencyExchanges.db"; // Replace with the path to your SQLite database
             string sqlFilePath = "../insert.sql"; // Replace with the path to your SQL file
-
-        using (SQLiteConnection connection = new SQLiteConnection($"Data Source={databasePath};"))
-        {
-            connection.Open();
-
+            
             // Read the SQL commands from the file
             string sqlCommands = File.ReadAllText(sqlFilePath);
 
-            // Split the file content into individual SQL statements
-            string[] commands = sqlCommands.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-          
-                try
+            if (File.Exists(sqlFilePath))
+            {
+   
+                using (SQLiteConnection connection = new SQLiteConnection($"Data Source={databasePath};"))
                 {
-                    // Execute each SQL command
-                    foreach (string commandText in commands)
-                    {
-                        using (SQLiteCommand command = new SQLiteCommand(commandText, connection))
+                    connection.Open();
+
+
+                    // Split the file content into individual SQL statements
+                    string[] commands = sqlCommands.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                
+                        try
                         {
-                            command.ExecuteNonQuery();
+                            // Execute each SQL command
+                            foreach (string commandText in commands)
+                            {
+                                using (SQLiteCommand command = new SQLiteCommand(commandText, connection))
+                                {
+                                    command.ExecuteNonQuery();
+                                }
+                            }
+                            Console.WriteLine("SQL file executed successfully.");
                         }
-                    }
-                    Console.WriteLine("SQL file executed successfully.");
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("Error executing SQL file: " + ex.Message);
+                        }
+                    
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Error executing SQL file: " + ex.Message);
-                }
-            
-        }
+            }
         }
 
 
