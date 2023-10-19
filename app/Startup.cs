@@ -44,10 +44,11 @@ namespace CurrencyConverter
             string sqlFilePath = "../insert.sql"; // Replace with the path to your SQL file
             
             // Read the SQL commands from the file
-            string sqlCommands = File.ReadAllText(sqlFilePath);
-
+            
             if (File.Exists(sqlFilePath))
             {
+                string sqlCommands = File.ReadAllText(sqlFilePath);
+
    
                 using (SQLiteConnection connection = new SQLiteConnection($"Data Source={databasePath};"))
                 {
