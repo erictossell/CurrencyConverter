@@ -291,6 +291,9 @@ function ExchangeRateTable() {
 
   }
 
+  function UpdateSelectOptions(newCurrency) {
+  }
+
   function setCurrencyInCookie(currencies) {
     const cookieName = "CurrencyExchange";
     const cookieValue = currencies.join(", "); // Convert the array to a comma-separated string
@@ -314,6 +317,7 @@ function ExchangeRateTable() {
 
     const HandleAddClick = () => {
       UpdateExchangeRateTable(newCurrency.toUpperCase());
+      UpdateSelectOptions(newCurrency.toUpperCase());
     };
 
     return (
@@ -412,6 +416,19 @@ function ConverterForm() {
   const [toCurrency, setToCurrency] = useState('USD');
   const [errorMsg, setErrorMsg] = useState('');
   const [outputResult, setOutputResult] = useState('00.00');
+  const [currenciesUsed, setCurrenciesUsed] = useState([ "CAD",
+  "USD",
+  "GBP",
+  "EUR",
+  "CNY",]);
+
+  useEffect(() => {
+    const cookieValueCU = getCookieValue("CurrenciesUsed");
+    if(cookieValueCU !== null && cookieValueCU !== undefined){
+      setCurrenciesUsed(cookieValueCU.split(","));
+    }  
+  }, []); 
+
   const handleInputChange = (inputValue) => {
       // Remove all non-numeric and non-dot characters
   const numericValue = inputValue.replace(/[^0-9.]/g, '');
@@ -436,6 +453,8 @@ function ConverterForm() {
   // Update the state with the formatted value
   setAmount(formattedValue);
   };
+
+  
 
   function getCookieValue(cookieName) {
     const name = cookieName + "=";
@@ -514,6 +533,7 @@ function ConverterForm() {
       fetch(`${apiUrl}/api/convert?amount=${parsedAmount}&from=${fromCurrency}&to=${toCurrency}`)
         .then((response) => response.json())
         .then((data) => {
+          var symbol = data.result.split(/\d/)[0]; // Replace 'symbol' with the correct property name
           console.log("SPLIT: " + data.result.split(/[^0-9.]+/)[1]);
           let parsedOutput = parseFloat(data.result.split(/[^0-9.]+/)[1]);
           if (!isNaN(parsedOutput)) {
@@ -522,23 +542,25 @@ function ConverterForm() {
             // Handle the case where parsing is not successful
             console.error("Failed to parse the value.");
           }
-          answerOut = parsedOutput;
+          answerOut =  symbol + parsedOutput;
+
+          parsedAmount = parsedAmount;
           console.log(parsedOutput);
           document.getElementById('outputResult').style.color = 'green';
           document.getElementById('outputResult').style.fontSize = 'big';
           
           // Perform a second fetch to get the symbol
-          return fetch(`${apiUrl}/generateExchangeRates?from=${fromCurrency}&to=${toCurrency}`);
+          return fetch(`${apiUrl}/generateExchangeRates?from=${toCurrency}&to=${fromCurrency}`);
         })
         .then((symbolResponse) => symbolResponse.json())
         .then((symbolData) => {
           var symbol = symbolData.result.split(/\d/)[0]; // Replace 'symbol' with the correct property name
           console.log(`Symbol: ${symbol}`);      
           // Use the symbol as needed
-          var fullOuput = symbol + answerOut;
+          var fullOuput = answerOut;
           setOutputResult(fullOuput);           
           console.log("save conv history..");
-          saveConversionHistory(parsedAmount, fromCurrency, toCurrency, fullOuput);
+          saveConversionHistory(symbol + parsedAmount, fromCurrency, toCurrency, fullOuput);
         })
         .catch((error) => {
           console.error(error); // Log any errors
@@ -551,32 +573,68 @@ function ConverterForm() {
     
   };
 
+  const handleClickExchangeImg = () => {
+    const selectFrom = document.getElementById("inputFrom");
+    const selectTo = document.getElementById("inputTo");
+  
+    // Check if both selects have options selected
+    if (selectFrom.selectedIndex !== -1 && selectTo.selectedIndex !== -1) {
+      // Swap the selected options
+      const optionFrom = selectFrom.options[selectFrom.selectedIndex];
+      const optionTo = selectTo.options[selectTo.selectedIndex];
+  
+      // Swap the text and values
+      const tempText = optionFrom.text;
+      const tempValue = optionFrom.value;
+      optionFrom.text = optionTo.text;
+      optionFrom.value = optionTo.value;
+      optionTo.text = tempText;
+      optionTo.value = tempValue;
+    }
+  };
+
+  
   return (
       <span className="card">
         <label htmlFor="inputAmount"  id="inputAmountLbl">Amount:</label>
         <input type="text" id="inputAmount" name="amount"  value={amount}
         onInput={(e) => setAmount(e.target.value)} onChange={(e) => handleInputChange(e.target.value)} />
         <div id="inputsDiv">
-          <label htmlFor="inputFrom" className="centerLabel">From:</label>  
-          <select  value={fromCurrency} onChange={(e) => setFromCurrency(e.target.value)} id="inputFrom" name="from" className="inputs" >
-            <option value="CAD" selected="selected">CAD</option>
-            <option value="USD">USD</option>
-            <option value="EUR">EUR</option>
-            <option value="GBP">GBP</option>
-            <option value="CNY">CNY</option>
-            {/* Add more options as needed */}
+          <label htmlFor="inputFrom" className="centerLabel">From:</label>
+          <select
+            value={fromCurrency}
+            onChange={(e) => setFromCurrency(e.target.value)}
+            id="inputFrom"
+            name="from"
+            className="inputs"
+          >
+            {currenciesUsed.map((currency) => (
+              <option key={currency} value={currency}>
+                {currency}
+              </option>
+            ))}
           </select>
-          <img src="/images/exchange.png" alt="Exchange Image" id="exchangeImg"></img>
+
+          <button onClick={handleClickExchangeImg}>
+            <img src="/images/exchange.png" alt="Exchange Image" id="exchangeImg"></img>
+          </button>
+
           <label htmlFor="inputTo" className="centerLabel">To:</label>
-          <select value={toCurrency} onChange={(e) => setToCurrency(e.target.value)} id="inputTo" className="inputs" name="to">
-            <option value="CAD">CAD</option>
-            <option value="USD" selected="selected">USD</option>
-            <option value="EUR">EUR</option>
-            <option value="GBP">GBP</option>
-            <option value="CNY">CNY</option>
-            {/* Add more options as needed */}
+          <select
+            value={toCurrency}
+            onChange={(e) => setToCurrency(e.target.value)}
+            id="inputTo"
+            className="inputs"
+            name="to"
+          >
+            {currenciesUsed.map((currency) => (
+              <option key={currency} value={currency}>
+                {currency}
+              </option>
+            ))}
           </select>
         </div>
+
         <button type="button" id="convertButton" onClick={handleConvertClick}>Convert:</button>
         <span id="outputResult" className="result">{outputResult} </span>
         <hr />
