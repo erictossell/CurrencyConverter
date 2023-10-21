@@ -38,14 +38,18 @@ function ExchangeRateTable() {
   });
   const [cookieVals, setCookieVals] = useState([]); // Initialize as an empty array
   const promises = [];
+  const table = document.getElementById('exchangeRates');
+  var tbody = null;
+  if(table !== null){
+    tbody = table.getElementsByTagName('tbody')[0];
+  }
 
   currenciesUsed.forEach((c) => {
     console.log("EXCHANGE RATE after CU cookie: " + c);
   });
 
   useEffect(() => {
-    // Call UpdateExchangeRateTable when the component is mounted
-  //  UpdateExchangeRateTable("JPY");
+     UpdateExchangeRateTable("JPY");
   }, []); // The empty dependency array ensures this runs only once on mount
 
 
@@ -74,9 +78,6 @@ function ExchangeRateTable() {
     if(cookieValueCU !== null && cookieValueCU !== undefined){
       currencies = cookieValueCU.split(",");
     }
-    
-    
-
     tableBody.innerHTML = ""; // Clear existing table body
     const cookieName = `CurrencyExchange`; // Use a consistent cookie name
     const cookieValue = getCookie(cookieName);
@@ -227,7 +228,10 @@ function ExchangeRateTable() {
   else {
     document.addEventListener("DOMContentLoaded", function () {
       console.log("generate table with cookie 3");
-      generateTableWithoutCookie();
+      if (tbody === null || tbody.children.length === 0) {
+      //generateTableWithoutCookie();
+      //^causes glitch
+      }
     });
   }
 
@@ -287,6 +291,8 @@ function ExchangeRateTable() {
       });
       createAndSetCookie(currenciesUsed);
       generateTableWithoutCookie();
+      
+      
     }
 
   }
