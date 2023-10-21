@@ -659,25 +659,27 @@ function ConverterForm() {
         <button type="button" id="convertButton" onClick={handleConvertClick}>Convert:</button>
         <span id="outputResult" className="result">{outputResult} </span>
         <hr />
-        <p id="convHistLabel">Conversion History</p>
-        <table id="conversionHistory">
-          <thead>
-            <tr>
-              <th>Amount</th>
-              <th>From</th>
-              <th>To</th>
-              <th>Result</th>
-            </tr>
-          </thead>
-          <tbody> {formData.map((data, index) => (
-            <tr key={index}>
-              <td>{data.amount}</td>
-              <td>{data.from}</td>
-              <td>{data.to}</td>
-              <td>{data.result}</td>
-            </tr>))}
-          </tbody>
-        </table>
+        <div id="convHistDiv">
+          <p id="convHistLabel">Conversion History</p>
+          <table id="conversionHistory">
+            <thead>
+              <tr>
+                <th>Amount</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Result</th>
+              </tr>
+            </thead>
+            <tbody> {formData.map((data, index) => (
+              <tr key={index}>
+                <td>{data.amount}</td>
+                <td>{data.from}</td>
+                <td>{data.to}</td>
+                <td>{data.result}</td>
+              </tr>))}
+            </tbody>
+          </table>
+        </div>
       </span>
   );
 }
