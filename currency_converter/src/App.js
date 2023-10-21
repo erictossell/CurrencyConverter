@@ -1,7 +1,7 @@
 import React, { useState, useEffect} from 'react';
 import Cookies from 'js-cookie';
 import config from './config';
-
+import Cleave from 'cleave.js/react';
 
 
 function Head(){
@@ -45,7 +45,7 @@ function ExchangeRateTable() {
 
   useEffect(() => {
     // Call UpdateExchangeRateTable when the component is mounted
-    UpdateExchangeRateTable("JPY");
+  //  UpdateExchangeRateTable("JPY");
   }, []); // The empty dependency array ensures this runs only once on mount
 
 
@@ -292,6 +292,7 @@ function ExchangeRateTable() {
   }
 
   function UpdateSelectOptions(newCurrency) {
+   
   }
 
   function setCurrencyInCookie(currencies) {
@@ -320,13 +321,14 @@ function ExchangeRateTable() {
       UpdateSelectOptions(newCurrency.toUpperCase());
     };
 
+
     return (
       <span>
         <p>
-          Add Currency:{" "}
           <select
             id="inputCurr"
-            className="inputs"
+            class="selectbox"
+            className="selectbox"
             name="currencyAdd"
             onChange={(e) => setNewCurrency(e.target.value)}
           >
@@ -359,7 +361,7 @@ function ExchangeRateTable() {
             <option value="THB">THB- Thai Baht</option>
             <option value="ZAR">ZAR - South African Rand</option>
           </select>{" "}
-          <button onClick={HandleAddClick}>Add</button>
+          <button onClick={HandleAddClick}  id ="btn" >Add</button>
         </p>
       </span>
     );
@@ -378,14 +380,34 @@ function ExchangeRateTable() {
   );
 }
 
+
 function ConverterForm() {
+  
   const apiUrl = process.env.NODE_ENV === 'production' ? config.production.apiUrl : config.development.apiUrl;
   const [formData, setFormData] = useState([]);
+  const [selectKey, setSelectKey] = useState(0); 
+      // Define a function to update the state based on the 'CurrenciesUsed' cookie
+    const updateCurrenciesUsedFromCookie = () => {
+        const savedCurrencies = Cookies.get('CurrenciesUsed');
+        // Check if the cookie exists and is not empty
+        if (savedCurrencies) {
+          console.log("Updating currencies....");
+          setCurrenciesUsed(savedCurrencies.split(','));
+        }
+      };
 
   useEffect(() => {
     // Call your fetchData function here
     fetchData();
-
+ 
+    // Call the update function initially when the component mounts
+    updateCurrenciesUsedFromCookie();
+    // Set up an event listener to react to changes in the 'CurrenciesUsed' cookie
+    window.addEventListener('storage', updateCurrenciesUsedFromCookie);
+    // Clean up the event listener when the component unmounts
+    return () => {
+      window.removeEventListener('storage', updateCurrenciesUsedFromCookie);
+    };
     // You can also provide a dependency array to control when this effect runs
   }, []);
 
@@ -429,32 +451,6 @@ function ConverterForm() {
     }  
   }, []); 
 
-  const handleInputChange = (inputValue) => {
-      // Remove all non-numeric and non-dot characters
-  const numericValue = inputValue.replace(/[^0-9.]/g, '');
-
-  // Split the numeric value into integer and decimal parts
-  const [integerPart, decimalPart] = numericValue.split('.');
-    // Allow the user to enter as many integer digits as they want before moving to the decimal part
-    const formattedValue =
-    integerPart && decimalPart === undefined
-      ? integerPart
-      : decimalPart
-      ? `${integerPart}.${decimalPart}`
-      : `${integerPart}.`;
-
-
-  if (formattedValue === '.' || formattedValue === "") {
-    setAmount('');
-    return;
-  }
-
-
-  // Update the state with the formatted value
-  setAmount(formattedValue);
-  };
-
-  
 
   function getCookieValue(cookieName) {
     const name = cookieName + "=";
@@ -514,6 +510,8 @@ function ConverterForm() {
     let newErrorMsg = '';
     let newOutputResult = '';
 
+    
+
     if (amount === null || amount === '') {
       newErrorMsg = 'No amount value entered.';
     } else if (isNaN(parsedAmount)) {
@@ -523,6 +521,15 @@ function ConverterForm() {
     }
     console.log(parsedAmount);
 
+      
+    let from = document.getElementById('inputFrom').value;
+    console.log("FROM AT CLICK: " + from);
+    let to = document.getElementById('inputTo').value;
+    console.log("FROM AT CLICK: " + to);
+    setFromCurrency(from);
+    setToCurrency(to);
+    parsedAmount = amount.replace(/,/g, '');
+
     if (newErrorMsg !== '') {
       console.log(newErrorMsg);
       setErrorMsg(newErrorMsg);
@@ -530,11 +537,11 @@ function ConverterForm() {
     } else {
       let answerOut = "";
       // Make an HTTP request to the server-side endpoint
-      fetch(`${apiUrl}/api/convert?amount=${parsedAmount}&from=${fromCurrency}&to=${toCurrency}`)
+      fetch(`${apiUrl}/api/convert?amount=${parsedAmount}&from=${from}&to=${to}`)
         .then((response) => response.json())
         .then((data) => {
           var symbol = data.result.split(/\d/)[0]; // Replace 'symbol' with the correct property name
-          console.log("SPLIT: " + data.result.split(/[^0-9.]+/)[1]);
+          console.log("SPLIT: " + data.result.split(/\d/)[0]);
           let parsedOutput = parseFloat(data.result.split(/[^0-9.]+/)[1]);
           if (!isNaN(parsedOutput)) {
             parsedOutput = parsedOutput.toFixed(2);
@@ -550,7 +557,7 @@ function ConverterForm() {
           document.getElementById('outputResult').style.fontSize = 'big';
           
           // Perform a second fetch to get the symbol
-          return fetch(`${apiUrl}/generateExchangeRates?from=${toCurrency}&to=${fromCurrency}`);
+          return fetch(`${apiUrl}/generateExchangeRates?from=${to}&to=${from}`);
         })
         .then((symbolResponse) => symbolResponse.json())
         .then((symbolData) => {
@@ -560,7 +567,7 @@ function ConverterForm() {
           var fullOuput = answerOut;
           setOutputResult(fullOuput);           
           console.log("save conv history..");
-          saveConversionHistory(symbol + parsedAmount, fromCurrency, toCurrency, fullOuput);
+          saveConversionHistory(symbol + parsedAmount, from, to, fullOuput);
         })
         .catch((error) => {
           console.error(error); // Log any errors
@@ -575,8 +582,8 @@ function ConverterForm() {
 
   const handleClickExchangeImg = () => {
     const selectFrom = document.getElementById("inputFrom");
-    const selectTo = document.getElementById("inputTo");
-  
+    const selectTo = document.getElementById("inputTo"); 
+    
     // Check if both selects have options selected
     if (selectFrom.selectedIndex !== -1 && selectTo.selectedIndex !== -1) {
       // Swap the selected options
@@ -593,12 +600,14 @@ function ConverterForm() {
     }
   };
 
+
+  
   
   return (
       <span className="card">
         <label htmlFor="inputAmount"  id="inputAmountLbl">Amount:</label>
-        <input type="text" id="inputAmount" name="amount"  value={amount}
-        onInput={(e) => setAmount(e.target.value)} onChange={(e) => handleInputChange(e.target.value)} />
+        <Cleave className="input-numeral" placeholder="0.00" options={{numeral: true, numeralThousandsGroupStyle: 'thousand'}}
+         onChange={(e) => setAmount(e.target.value)} htmlFor="inputAmount"  id="inputAmount"/>
         <div id="inputsDiv">
           <label htmlFor="inputFrom" className="centerLabel">From:</label>
           <select
@@ -606,7 +615,10 @@ function ConverterForm() {
             onChange={(e) => setFromCurrency(e.target.value)}
             id="inputFrom"
             name="from"
-            className="inputs"
+            class="selectbox"
+            className="selectbox"
+            key={selectKey} // Key to trigger re-render
+            onClick={() => updateCurrenciesUsedFromCookie()}
           >
             {currenciesUsed.map((currency) => (
               <option key={currency} value={currency}>
@@ -615,7 +627,7 @@ function ConverterForm() {
             ))}
           </select>
 
-          <button onClick={handleClickExchangeImg}>
+          <button onClick={handleClickExchangeImg} id ="exchangeImgBtn">
             <img src="/images/exchange.png" alt="Exchange Image" id="exchangeImg"></img>
           </button>
 
@@ -624,8 +636,11 @@ function ConverterForm() {
             value={toCurrency}
             onChange={(e) => setToCurrency(e.target.value)}
             id="inputTo"
-            className="inputs"
+            class="selectbox"
+            className="selectbox"
             name="to"
+            key={selectKey} // Key to trigger re-render
+                onClick={() => updateCurrenciesUsedFromCookie()}
           >
             {currenciesUsed.map((currency) => (
               <option key={currency} value={currency}>
