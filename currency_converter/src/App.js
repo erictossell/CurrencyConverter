@@ -2,6 +2,7 @@ import React, { useState, useEffect} from 'react';
 import Cookies from 'js-cookie';
 import config from './config';
 import Cleave from 'cleave.js/react';
+import { hasFlag } from 'country-flag-icons'
 
 
 function Head(){
@@ -291,10 +292,7 @@ function ExchangeRateTable() {
       });
       createAndSetCookie(currenciesUsed);
       generateTableWithoutCookie();
-      
-      
     }
-
   }
 
   function UpdateSelectOptions(newCurrency) {
@@ -336,8 +334,7 @@ function ExchangeRateTable() {
             class="selectbox"
             className="selectbox"
             name="currencyAdd"
-            onChange={(e) => setNewCurrency(e.target.value)}
-          >
+            onChange={(e) => setNewCurrency(e.target.value)}>
             <option value="JPY">JPY - Japanese Yen</option>
             <option value="BGN">BGN - Bulgarian Lev</option>
             <option value="CZK">CZK - Czech Republic Koruna</option>
@@ -611,6 +608,7 @@ function ConverterForm() {
   
   return (
       <span className="card">
+        <h2 id ="widg">Conversion Widget:</h2>
         <label htmlFor="inputAmount"  id="inputAmountLbl">Amount:</label>
         <Cleave className="input-numeral" placeholder="0.00" options={{numeral: true, numeralThousandsGroupStyle: 'thousand'}}
          onChange={(e) => setAmount(e.target.value)} htmlFor="inputAmount"  id="inputAmount"/>
@@ -701,6 +699,122 @@ function Footer() {
   );
 }
 
+
+function Flags(){
+  const maxLoops = 33;
+  const [showDialog, setShowDialog] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imageUrls, setImageUrls] = useState([]);
+  const apiUrl = process.env.NODE_ENV === 'production' ? config.production.apiUrl : config.development.apiUrl;
+  useEffect(() => {
+  fetch(`${apiUrl}/retrieveAll`)
+  .then((response) => response.json())
+  .then((data) => {
+    const newImageUrls = [];
+    let count = 0; // Initialize a counter
+
+    for (let i = 0; i < data.result.length; i++) {
+      if (count >= maxLoops) {
+        break; // Exit the loop after 30 iterations
+      }
+
+      const item = data.result[i];
+      var c = item;
+      const countryCode = c.substring(0, 2);
+
+      if (hasFlag(countryCode)) {
+        newImageUrls.push(`http://purecatamphetamine.github.io/country-flag-icons/3x2/${countryCode}.svg`);
+        count++; // Increment the counter
+      }
+    }
+
+    setImageUrls(newImageUrls);
+  })
+  .catch((error) => {
+    console.log("ERROR FLAGS : " + error);
+  });
+}, []); 
+
+
+  const openDialog = (imageUrl) => {
+    closeDialog();
+    setSelectedImage(imageUrl);
+    setShowDialog(true);
+    const regexInfo = /\/([a-zA-Z]+)\.svg/;
+    const regexStricter = /[A-Z]+/;
+
+    var imgCode = imageUrl.match(regexInfo)[0];
+     imgCode = imgCode.match(regexStricter)[0];
+    var info = "";
+    fetch(`${apiUrl}/retrieveCurrencyInfo`)
+    .then((response) => response.json())
+    .then((data) => {
+      let count = 0; // Initialize a counter
+      const regex = /<br>Code(.*)<br>Base/;
+      for (let i = 0; i < data.result.length; i++) {
+        var code = data.result[i].match(regex)[0];
+        code = code.split(' ')[1];
+        console.log("CODE: " + code + " IMGCODE: " + imgCode);
+        if(code.substring(0,2) == imgCode){
+          info = data.result[i];
+          console.log("INFO for FLAGS: " + info);
+          break;
+        }
+      }
+      const div = document.getElementsByClassName('dialog-content')[0];
+      const para = document.createElement('p');
+      para.className = "dialogInfo";
+      para.innerHTML = info;
+      div.appendChild(para);
+    })
+    .catch((error) => {
+      console.log("ERROR: " + error);
+    });
+  
+  };
+
+  const closeDialog = () => {
+    setShowDialog(false);
+    const div = document.getElementsByClassName('dialog-content')[0];
+    const para = document.getElementsByClassName('dialogInfo')[0];
+    if(div !== undefined && para !== undefined){
+      div.removeChild(para);
+    }
+  };
+
+  return (
+      <div id = "flags">
+        <h2 id = "quickSel">Currency Stats:</h2>
+        <p>(Click on a flag for currency info)</p>
+        
+      {showDialog && (
+        <div className="dialog">
+          <div className="dialog-content">
+            <img src={selectedImage} alt="Selected Image" className="imageDialog"/>
+            <button onClick={closeDialog} id ="imgBtn">Close</button>
+          </div>
+        </div>
+      )}
+
+        {imageUrls.map((imageUrl, index) => (
+        <div key={index} className="image-grid-container">
+          <img
+            src={imageUrl}
+            alt={`Image ${index}`}
+            width="30"
+            height="25"
+            className="image-grid-item"
+            onClick={() => openDialog(imageUrl)}
+          />
+        </div>
+      ))}
+
+
+      </div>
+  )
+}
+
+
 function App() {
   return (
   <div id="alphaDiv">
@@ -709,6 +823,7 @@ function App() {
       <ConverterForm />
         <div className="content2">
           <ExchangeRateTable />
+          <Flags/>
         </div>
       <Footer />
   </div>

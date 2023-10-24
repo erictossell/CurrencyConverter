@@ -1,3 +1,9 @@
+html{
+  width:100%;
+  height:100%;
+  background: linear-gradient(135deg, #195905, #000);
+}
+
 body {
   background: linear-gradient(135deg, #195905, #000);
   display: flex;
@@ -10,7 +16,6 @@ body {
   height:100%;
   margin-left:22.5%;
 }
-
 
 .input-numeral {
   font-size:1.5em;
@@ -156,7 +161,7 @@ select {
 }
 
 button[type="button"] {
-  background-color: #4CAF50;
+  background-color: #033d1d;
   color: white;
   padding: 2px 2px;
   margin: 1px auto;
@@ -369,7 +374,6 @@ a{
 @media screen and (max-width: 600px) {
 #exchangeRates{
   display:flex;
-  margin-bottom:25%;
 }
 }
 
@@ -377,29 +381,25 @@ a{
 #cardER{
   height:10%;
   width:50%;
-  margin-top:10%;
+  margin-top:29%;
   margin-left:5%;
 }
 
 
 @media screen and (max-width: 600px) {
-#cardER{
-  display:inline-block;
-  height:100%;
-  width:100%;
-  margin-top:0%;
-  margin-left:0%;
+  #cardER{
+    display:inline-block;
+    height:100%;
+    width:100%;
+    margin-top:0%;
+    margin-left:0%;
+  }
 }
-}
-
-
-
-
 
 .card {
   background-color:whitesmoke;
   width:100%;
-  margin-left:2%;
+  margin-left:5%;
   margin-right:5%;
 }
 
@@ -507,6 +507,7 @@ a{
 
 #inputCurr{
   display: inline-block;
+  width:15em;
 }
 
 #convHistLabel {
@@ -561,3 +562,129 @@ a{
 	color: #000000;
 	border: 3px solid #008040;
 }
+
+.flags{
+  display:flex;
+  height:100%;
+  background-color: #195905;
+}
+
+.flagImgs{
+  display:flex;
+}
+
+.image-grid-container {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 100%; /* Set the maximum width before overflowing */
+  max-height:30%;
+  margin:1em;
+  float:left;
+}
+
+.image-grid-item {
+  margin: 0.2em; /* Add some spacing between flags */
+}
+
+#quickSel{
+  margin-top:5%;
+}
+
+#widg{
+  margin:0.5em;
+}
+/* Add this CSS to your stylesheet or style block */
+
+/* Styles for the pop-up overlay */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Styles for the pop-up content */
+.popup {
+  background: #fff;
+  padding: 2em;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  text-align: center;
+}
+
+.popup img {
+  max-width: 40vh;
+  max-height: 40vh;
+}
+
+/* Close button styles */
+.popup button {
+  background: #333;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  margin-top: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.popup button:hover {
+  background: #555;
+}
+
+/* Hide the pop-up initially */
+.popup-overlay {
+  display: none;
+}
+
+/* Show the pop-up when it's active */
+.popup-overlay.active {
+  display: flex;
+}
+
+.imageDialog{
+  width:50%;
+  height:30%;
+}
+
+
+#imgBtn{
+  background: #4fd934;
+  background-image: -webkit-linear-gradient(top, #4fd934, #ffffff);
+  background-image: -moz-linear-gradient(top, #4fd934, #ffffff);
+  background-image: -ms-linear-gradient(top, #4fd934, #ffffff);
+  background-image: -o-linear-gradient(top, #4fd934, #ffffff);
+  background-image: linear-gradient(to bottom, #4fd934, #ffffff);
+  -webkit-border-radius: 28;
+  -moz-border-radius: 28;
+  border-radius: 28px;
+  text-shadow: 0px 1px 3px #000000;
+  -webkit-box-shadow: 0px 1px 3px #050105;
+  -moz-box-shadow: 0px 1px 3px #050105;
+  box-shadow: 0px 1px 3px #050105;
+  font-family: Arial;
+  color: #ffffff;
+  font-size: 1em;
+  border: solid #2ab01e 2px;
+  text-decoration: none;
+  float:right;
+  height:1.5em;
+  margin-right:15%;
+}
+
+#imgBtn:hover {
+  background: #ffffff;
+  background-image: -webkit-linear-gradient(top, #ffffff, #38d611);
+  background-image: -moz-linear-gradient(top, #ffffff, #38d611);
+  background-image: -ms-linear-gradient(top, #ffffff, #38d611);
+  background-image: -o-linear-gradient(top, #ffffff, #38d611);
+  background-image: linear-gradient(to bottom, #ffffff, #38d611);
+  text-decoration: none;
+}
+
