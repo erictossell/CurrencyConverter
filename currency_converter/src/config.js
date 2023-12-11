@@ -3,7 +3,7 @@ const config = {
       apiUrl: 'http://localhost:5000',
     },
     production: {
-      apiUrl: 'https://devdavidwagner-currencyconverter.up.railway.app/',
+      apiUrl: 'https://devdavidwagner-currencyconverter.up.railway.app',
     },
   };
   
