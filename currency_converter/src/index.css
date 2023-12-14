@@ -1,11 +1,11 @@
 html{
   width:100%;
   height:100%;
-  background: linear-gradient(135deg, #195905, #000);
+  background: black;
 }
 
 body {
-  background: linear-gradient(135deg, #195905, #000);
+  background: radial-gradient(circle, rgba(0,0,0,1) 0%, rgba(28,116,71,1) 47%, rgba(0,0,0,1) 100%);
   display: flex;
   min-height: 100%;
   font-family: Arial, sans-serif;
@@ -24,7 +24,7 @@ body {
 
 @media screen and (max-width: 600px) {
   body {
-    background: linear-gradient(135deg, #195905, #000);
+    background: radial-gradient(circle, rgba(0,0,0,1) 0%, rgba(28,116,71,1) 47%, rgba(0,0,0,1) 100%);
     display: inline-block;
     min-height: 100%;
     font-family: Arial, sans-serif;
@@ -45,6 +45,7 @@ header{
   background-color: #4CAF50;
   color: white;
   text-align: center;
+  z-index: 1000; /* Set a high z-index value */
 }
 
 
@@ -61,34 +62,33 @@ header{
 }
 
 h1 {
-  background: linear-gradient(135deg, #195905, #000);
+  background: black;
   color: white;
   margin: 0;
-  padding: 2%;
+  padding: 1%;
   text-align: center;
   border: 2px solid #000;
   border-radius: 2px;
   box-shadow: 0px 0px 10px rgba(76, 175, 80, 0.5);
+  width:100%;
 }
 
 h2 {
-  background: linear-gradient(135deg, #195905, #000);
+  background: black;
   color: white;
   margin: 0;
-  padding: 2%;
+  padding: 1%;
   text-align: center;
   border: 2px solid #000;
-  border-radius: 2px;
-  box-shadow: 0px 0px 10px rgba(76, 175, 80, 0.5);
 }
 
 
 p {
-  background: linear-gradient(135deg, #195905, #000);
+  background: black;
   color: white;
-  margin: 0;
-  padding: 2%;
+  padding:1%;
   text-align: center;
+  border-radius: 10px; /* You can adjust the pixel value to control the roundness */
 }
 
 footer {
@@ -96,8 +96,9 @@ footer {
   left: 0;
   position:fixed;
   width: 100%;
-  height:10%;
-  background-color: #000;
+  height:5%;
+  background-color: black;
+  padding:1%;
   color: white;
   text-align: center;
 }
@@ -130,10 +131,12 @@ select {
   height:100%;
 }
 #inputAmount{
-  margin-left: 33%;
-  width:25%;
+  margin-left: 25%;
+  width:45%;
   height:3%;
-  padding: 0.5em 0.5em 0.5em 0.5em;
+  padding: 0.8em 0.8em 0.8em 0.8em;
+  font-size: 2em;
+
 }
 @media screen and (max-width: 600px) {
 #inputAmount{
@@ -144,9 +147,10 @@ select {
 }
 
 #inputAmountLbl{
-  margin-left: 40%;
+
+  margin-left: 25%;
   width: 10%;
-  font-size: 1.3em;
+  font-size: 2em;
   font-weight: bold;
 }
 
@@ -175,7 +179,8 @@ button[type="button"]:hover {
 }
 
 table {
-  border-collapse: collapse;
+  border-radius: 10px; /* You can adjust the pixel value to control the roundness */
+  background:whitesmoke;
   width: 100%;
 }
 
@@ -184,6 +189,7 @@ th, td {
   padding: 0.5em; /* Add padding for cell content */
   background-color: #f2f2f2;
   text-align: center;
+  
 }
 
 /* Set a fixed width for table columns */
@@ -219,65 +225,58 @@ a{
 }
 
 
+@media screen and (max-width: 600px) {
+  .result {
+    display: block;
+    font-size: 2em;
+    font-weight: bold;
+    margin-right:12%;
+    width:30%;
+    margin-bottom:1%;
+  }
+}
+
 #alphaDiv {
-  background-color:whitesmoke;
   display: flex;
-  margin-top:8%;
   width:100%;
-  height:100%;
+  height:50%;
+
+  padding-top:5%;
 }
 
 @media screen and (max-width: 600px) {
 #alphaDiv {
-  background-color:whitesmoke;
+  background-color:linear-gradient(0deg, rgba(209,227,206,1) 0%, rgba(36,71,32,1) 51%, rgba(22,71,16,1) 95%);;
   display: inline-block;
   width:100%;
   height:100%;
+  margin-top:10%;
+  padding-top:1%;
 }
 }
 
 #btn{
-  background: #4fd934;
-  background-image: -webkit-linear-gradient(top, #4fd934, #ffffff);
-  background-image: -moz-linear-gradient(top, #4fd934, #ffffff);
-  background-image: -ms-linear-gradient(top, #4fd934, #ffffff);
-  background-image: -o-linear-gradient(top, #4fd934, #ffffff);
-  background-image: linear-gradient(to bottom, #4fd934, #ffffff);
-  -webkit-border-radius: 28;
-  -moz-border-radius: 28;
-  border-radius: 28px;
-  text-shadow: 0px 1px 3px #000000;
-  -webkit-box-shadow: 0px 1px 3px #050105;
-  -moz-box-shadow: 0px 1px 3px #050105;
-  box-shadow: 0px 1px 3px #050105;
+  background: black;
+  -webkit-border-radius: 5;
+  -moz-border-radius: 5;
+  border-radius: 5px;
   font-family: Arial;
   color: #ffffff;
   font-size: 20px;
   padding: 10px 20px 10px 20px;
-  border: solid #2ab01e 2px;
   text-decoration: none;
   float:left;
-  height:2.5em;
+  height:2.0em;
 }
 
 #btn:hover {
-  background: #ffffff;
-  background-image: -webkit-linear-gradient(top, #ffffff, #38d611);
-  background-image: -moz-linear-gradient(top, #ffffff, #38d611);
-  background-image: -ms-linear-gradient(top, #ffffff, #38d611);
-  background-image: -o-linear-gradient(top, #ffffff, #38d611);
-  background-image: linear-gradient(to bottom, #ffffff, #38d611);
+  background: grey;
   text-decoration: none;
 }
 
 @media screen and (max-width: 600px) {
 #exchangeImgBtn{
-  background: #4fd934;
-  background-image: -webkit-linear-gradient(top, #4fd934, #ffffff);
-  background-image: -moz-linear-gradient(top, #4fd934, #ffffff);
-  background-image: -ms-linear-gradient(top, #4fd934, #ffffff);
-  background-image: -o-linear-gradient(top, #4fd934, #ffffff);
-  background-image: linear-gradient(to bottom, #4fd934, #ffffff);
+  background: grey;
   -webkit-border-radius: 28;
   -moz-border-radius: 28;
   border-radius: 28px;
@@ -289,50 +288,41 @@ a{
   color: #ffffff;
   font-size: 20px;
   padding: 10px 20px 10px 20px;
-  border: solid #2ab01e 2px;
-  text-decoration: none;
-  float:left;
-  margin-top:5%;
-  margin-left:5%;
-  margin-bottom: 5%;
-  height:2.5em;
-}
-}
-
-#exchangeImgBtn{
-  background: #4fd934;
-  background-image: -webkit-linear-gradient(top, #4fd934, #ffffff);
-  background-image: -moz-linear-gradient(top, #4fd934, #ffffff);
-  background-image: -ms-linear-gradient(top, #4fd934, #ffffff);
-  background-image: -o-linear-gradient(top, #4fd934, #ffffff);
-  background-image: linear-gradient(to bottom, #4fd934, #ffffff);
-  -webkit-border-radius: 28;
-  -moz-border-radius: 28;
-  border-radius: 28px;
-  text-shadow: 0px 1px 3px #000000;
-  -webkit-box-shadow: 0px 1px 3px #050105;
-  -moz-box-shadow: 0px 1px 3px #050105;
-  box-shadow: 0px 1px 3px #050105;
-  font-family: Arial;
-  color: #ffffff;
-  font-size: 20px;
-  padding: 10px 20px 10px 20px;
-  border: solid #2ab01e 2px;
   text-decoration: none;
   margin-top:5%;
   margin-left:5%;
   margin-bottom: 5%;
-  margin-right:75%;
   height:2.5em;
 }
 
 #exchangeImgBtn:hover {
-  background: #ffffff;
-  background-image: -webkit-linear-gradient(top, #ffffff, #38d611);
-  background-image: -moz-linear-gradient(top, #ffffff, #38d611);
-  background-image: -ms-linear-gradient(top, #ffffff, #38d611);
-  background-image: -o-linear-gradient(top, #ffffff, #38d611);
-  background-image: linear-gradient(to bottom, #ffffff, #38d611);
+  background: whitesmoke;
+  text-decoration: none;
+}
+}
+
+#exchangeImgBtn{
+  background: grey;
+  -webkit-border-radius: 28;
+  -moz-border-radius: 28;
+  border-radius: 28px;
+  text-shadow: 0px 1px 3px #000000;
+  -webkit-box-shadow: 0px 1px 3px #050105;
+  -moz-box-shadow: 0px 1px 3px #050105;
+  box-shadow: 0px 1px 3px #050105;
+  font-family: Arial;
+  color: #ffffff;
+  font-size: 20px;
+  padding: 10px 20px 10px 20px;
+  text-decoration: none;
+  margin-top:5%;
+  margin-left:5%;
+  margin-bottom: 5%;
+  height:2.5em;
+}
+
+#exchangeImgBtn:hover {
+  background: whitesmoke;
   text-decoration: none;
 }
 
@@ -355,23 +345,43 @@ a{
 }
 
 .content2 {
-  display:inline-block;
-  height:100%;
-  width:100%;
+  background-color:whitesmoke;
+  position:fixed;
+  left:50%;
+  top:10%;
+  width:40%;
+  height:90%;
+  margin-left:5%;
   margin-right:5%;
+  margin-bottom:10%;
+  border-radius: 10px; /* You can adjust the pixel value to control the roundness */
+  padding-left: 1%; /* Add padding to the element for better appearance */
+  padding-right: 1%; /* Add padding to the element for better appearance */
+  background-color: #f0f0f0; /* Optional: Set a background color */
+  overflow-y: auto;
 }
 
 @media screen and (max-width: 600px) {
 .content2 {
-  display:inline-block;
-  height:100%;
+  background-color:whitesmoke;
+  position:relative;
+  left:0%;
+  top:0%;
   width:100%;
-  margin-bottom:25%;
+  height:90%;
+  margin-left:0%;
+  margin-top:5%;
+  border-radius: 10px; /* You can adjust the pixel value to control the roundness */
+  background-color: #f0f0f0; /* Optional: Set a background color */
+  overflow-y: auto;
 }
 }
 
 #exchangeRates{
+  
   display:flex;
+  width:100%;
+  font-size:1em;
 }
 
 @media screen and (max-width: 600px) {
@@ -383,11 +393,14 @@ a{
 
 #cardER{
   height:10%;
-  width:50%;
-  margin-top:29%;
-  margin-left:5%;
+  width:70%;
+  margin:1%;
+  padding:1%; 
 }
 
+#headerER{
+  border-radius: 10px; /* You can adjust the pixel value to control the roundness */
+}
 
 @media screen and (max-width: 600px) {
   #cardER{
@@ -401,14 +414,30 @@ a{
 
 .card {
   background-color:whitesmoke;
-  width:100%;
+  position:fixed;
+  left:0%;
+  top:10%;
+  width:40%;
+  height:70%;
   margin-left:5%;
   margin-right:5%;
+  border-radius: 10px; /* You can adjust the pixel value to control the roundness */
+  padding-left:1%;
+  padding-right:1%;
+  background-color: #f0f0f0; /* Optional: Set a background color */
 }
 
 @media screen and (max-width: 600px) {
   .card {
     background-color:whitesmoke;
+    display:inline-block;
+    position:relative;
+    margin-top:5%;
+    margin-left:0%;
+    border-radius: 10px; /* You can adjust the pixel value to control the roundness */
+    padding-left:1%;
+    padding-right:1%;
+    background-color: #f0f0f0; /* Optional: Set a background color */
     width:100%;
   }
 }
@@ -423,12 +452,7 @@ a{
 }
 
 #convertButton {
-  background: #4fd934;
-  background-image: -webkit-linear-gradient(top, #4fd934, #000000);
-  background-image: -moz-linear-gradient(top, #4fd934, #000000);
-  background-image: -ms-linear-gradient(top, #4fd934, #000000);
-  background-image: -o-linear-gradient(top, #4fd934, #000000);
-  background-image: linear-gradient(to bottom, #4fd934, #000000);
+  background:black;
   -webkit-border-radius: 28;
   -moz-border-radius: 28;
   border-radius: 28px;
@@ -440,22 +464,17 @@ a{
   color: #ffffff;
   font-size: 20px;
   padding: 10px 20px 10px 20px;
-  border: solid #2ab01e 2px;
   text-decoration: none;
   margin-right:10.5%;
   margin-top:5%;
   margin-bottom:5%;
+  margin-left:5%;
   width:10em;
 }
 
 @media screen and (max-width: 600px) {
 #convertButton {
-  background: #4fd934;
-  background-image: -webkit-linear-gradient(top, #4fd934, #000000);
-  background-image: -moz-linear-gradient(top, #4fd934, #000000);
-  background-image: -ms-linear-gradient(top, #4fd934, #000000);
-  background-image: -o-linear-gradient(top, #4fd934, #000000);
-  background-image: linear-gradient(to bottom, #4fd934, #000000);
+  background:black;
   -webkit-border-radius: 28;
   -moz-border-radius: 28;
   border-radius: 28px;
@@ -467,41 +486,42 @@ a{
   color: #ffffff;
   font-size: 20px;
   padding: 10px 20px 10px 20px;
-  border: solid #2ab01e 2px;
   text-decoration: none;
-  margin-right:12.5%;
-  margin-left:15%;
+  margin-right:10.5%;
+  margin-top:5%;
   margin-bottom:5%;
+  margin-left:5%;
   width:10em;
 }
 }
 
 #convertButton:hover {
-  background: #ffffff;
-  background-image: -webkit-linear-gradient(top, #ffffff, #38d611);
-  background-image: -moz-linear-gradient(top, #ffffff, #38d611);
-  background-image: -ms-linear-gradient(top, #ffffff, #38d611);
-  background-image: -o-linear-gradient(top, #ffffff, #38d611);
-  background-image: linear-gradient(to bottom, #ffffff, #38d611);
+  background: grey;
   text-decoration: none;
 }
 
 #inputsDiv{
-  display: flexbox;
   margin-top: 5%;
-  margin-left:35%;
+  margin-left:10%;
+  display:flex;
+  font-size: 1em;
+  float:left;
 }
 
 @media screen and (max-width: 600px) {
 
 #inputsDiv{
   margin-top: 5%;
-  margin-left:33%;
+  margin-left:0%;
+  display:flex;
+  padding:1%;
+  font-size: 1em;
+
 }
 }
 
 .centerLabel{
-  font-size: 20px;
+ 
   font-weight: bold;
   width: 33%;
 }
@@ -522,12 +542,25 @@ a{
 }
 
 #convHistLabel {
-  background-color: whitesmoke;
+  background-color: linear-gradient(0deg, rgba(209,227,206,1) 0%, rgba(36,71,32,1) 51%, rgba(22,71,16,1) 95%);;
   display: block;
   font-size: 20px;
   font-weight: bold;
   color: white;
   text-align: center;
+  padding:1%;
+  margin-top:1%;
+}
+
+#convertLabel{
+  background-color:black;
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  text-align: center;
+  padding:1%;
+  width:95%;
+  border-radius: 10px; /* You can adjust the pixel value to control the roundness */
 }
 
 #convHistDiv{
@@ -541,39 +574,53 @@ a{
 }
 
 #smallText {
-  background-color: whitesmoke;
+  background-color: linear-gradient(0deg, rgba(209,227,206,1) 0%, rgba(36,71,32,1) 51%, rgba(22,71,16,1) 95%);;
   font-size: 14px;
   font-weight: bold;
   color: white;
 }
 
-
-.outputResults {
-  display: inline-block;
-  margin-top: 5%;
-  padding: 5%;
+#outputResult{
+  display: flex;
+  margin-top: 1%;
+  padding-left:12.5%;
+  padding-top:2%;
+  padding-bottom:2%;
   border-radius: 4px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0,1)
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0,1);
+  font-size: 2em;
+  margin-right:35%;
+  margin-left:30%;
+  text-align: center;
 }
+
+
 
 @media screen and (max-width: 600px) {
 
-.outputResults {
-  display: inline-block;
-  margin-top: 5%;
-  padding: 5%;
-  border-radius: 4px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0,1)
-}
+  #outputResult{
+    display: flex;
+    margin-top: 1%;
+    padding-left:12.5%;
+    padding-top:2%;
+    padding-bottom:2%;
+    padding-right:2%;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0,1);
+    font-size: 2em;
+    margin-right:35%;
+    margin-left:30%;
+    text-align: center;
+  }
 }
 
 .selectbox {
 	cursor: pointer;
 	outline:0;
 	color: #033d1d;
-	font-size: 16px;
+	font-size: 1em;
 	padding: 10px 10px;
-	min-width: 143px;
+	width:5em;
 	border-radius: 23px;
 	border: 3px solid #000000;
 	background-color: #ffffff;
@@ -586,16 +633,16 @@ a{
 
 .flags{
   display:flex;
-  height:100%;
-  background-color: #195905;
+  height:50%;
+  width:40%;
 }
 
 .flagImgs{
   display:flex;
 }
 
+
 .image-grid-container {
-  display: flex;
   flex-wrap: wrap;
   max-width: 100%; /* Set the maximum width before overflowing */
   max-height:30%;
@@ -608,7 +655,10 @@ a{
 }
 
 #quickSel{
-  margin-top:5%;
+  margin-top:3.2%;
+  border-radius: 10px; /* You can adjust the pixel value to control the roundness */
+  margin:1%;
+  margin-right:2%;
 }
 
 #widg{
@@ -670,18 +720,13 @@ a{
 }
 
 .imageDialog{
-  width:50%;
-  height:30%;
+  width:10%;
+  height:10%;
 }
 
 
 #imgBtn{
-  background: #4fd934;
-  background-image: -webkit-linear-gradient(top, #4fd934, #ffffff);
-  background-image: -moz-linear-gradient(top, #4fd934, #ffffff);
-  background-image: -ms-linear-gradient(top, #4fd934, #ffffff);
-  background-image: -o-linear-gradient(top, #4fd934, #ffffff);
-  background-image: linear-gradient(to bottom, #4fd934, #ffffff);
+  background: black;
   -webkit-border-radius: 28;
   -moz-border-radius: 28;
   border-radius: 28px;
@@ -692,7 +737,6 @@ a{
   font-family: Arial;
   color: #ffffff;
   font-size: 1em;
-  border: solid #2ab01e 2px;
   text-decoration: none;
   float:right;
   height:1.5em;
@@ -700,12 +744,7 @@ a{
 }
 
 #imgBtn:hover {
-  background: #ffffff;
-  background-image: -webkit-linear-gradient(top, #ffffff, #38d611);
-  background-image: -moz-linear-gradient(top, #ffffff, #38d611);
-  background-image: -ms-linear-gradient(top, #ffffff, #38d611);
-  background-image: -o-linear-gradient(top, #ffffff, #38d611);
-  background-image: linear-gradient(to bottom, #ffffff, #38d611);
+  background: grey;
   text-decoration: none;
 }
 

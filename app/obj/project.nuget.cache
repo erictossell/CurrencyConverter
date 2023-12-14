@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "JgqV0PuhUk8S1X2AR1aEfoXVaqeG0IYLInzgp3Cekf2NBtvQJKcTX4Bzs/UizVVaAa5Y+uAgNsXze+2Us1LE1A==",
+  "dgSpecHash": "AZIqUtorxjTNqZ45kw4jWs3xfpHPO4hWDJcwOAFAjW7nA7KT0fXC+OSSNjqgyoNsS2UTJpRxvMuVmdyPFVXAxA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\David\\Programming\\CurrencyConverter\\app\\CurrencyConverter.csproj",
+  "projectFilePath": "C:\\Users\\David\\Documents\\Code\\CurrencyConverter\\app\\CurrencyConverter.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\David\\.nuget\\packages\\entityframework\\6.4.4\\entityframework.6.4.4.nupkg.sha512",
     "C:\\Users\\David\\.nuget\\packages\\htmlagilitypack\\1.11.46\\htmlagilitypack.1.11.46.nupkg.sha512",
@@ -203,11 +203,7 @@
     "C:\\Users\\David\\.nuget\\packages\\system.xml.xdocument\\4.3.0\\system.xml.xdocument.4.3.0.nupkg.sha512",
     "C:\\Users\\David\\.nuget\\packages\\system.xml.xmldocument\\4.3.0\\system.xml.xmldocument.4.3.0.nupkg.sha512",
     "C:\\Users\\David\\.nuget\\packages\\system.xml.xpath\\4.3.0\\system.xml.xpath.4.3.0.nupkg.sha512",
-    "C:\\Users\\David\\.nuget\\packages\\system.xml.xpath.xdocument\\4.3.0\\system.xml.xpath.xdocument.4.3.0.nupkg.sha512",
-    "C:\\Users\\David\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\6.0.16\\microsoft.aspnetcore.app.ref.6.0.16.nupkg.sha512",
-    "C:\\Users\\David\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\6.0.16\\microsoft.netcore.app.host.win-x64.6.0.16.nupkg.sha512",
-    "C:\\Users\\David\\.nuget\\packages\\microsoft.netcore.app.ref\\6.0.16\\microsoft.netcore.app.ref.6.0.16.nupkg.sha512",
-    "C:\\Users\\David\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\6.0.16\\microsoft.windowsdesktop.app.ref.6.0.16.nupkg.sha512"
+    "C:\\Users\\David\\.nuget\\packages\\system.xml.xpath.xdocument\\4.3.0\\system.xml.xpath.xdocument.4.3.0.nupkg.sha512"
   ],
   "logs": []
 }

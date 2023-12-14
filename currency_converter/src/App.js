@@ -328,6 +328,7 @@ function ExchangeRateTable() {
 
     return (
       <span>
+        <h2 id ="headerER">Exchange Rate Table:</h2>
         <p>
           <select
             id="inputCurr"
@@ -608,11 +609,10 @@ function ConverterForm() {
   
   return (
       <span className="card">
-        <h2 id ="widg">Conversion Widget:</h2>
-        <label htmlFor="inputAmount"  id="inputAmountLbl">Amount:</label>
+        <p id="convertLabel">Convert:</p>
         <Cleave className="input-numeral" placeholder="0.00" options={{numeral: true, numeralThousandsGroupStyle: 'thousand'}}
          onChange={(e) => setAmount(e.target.value)} htmlFor="inputAmount"  id="inputAmount"/>
-        <div id="inputsDiv">
+        <div id="inputsDiv">   
           <label htmlFor="inputFrom" className="centerLabel">From:</label>
           <select
             value={fromCurrency}
@@ -656,8 +656,8 @@ function ConverterForm() {
 
         <button type="button" id="convertButton" onClick={handleConvertClick}>Convert:</button>
         <span id="outputResult" className="result">{outputResult} </span>
-        <hr />
         <div id="convHistDiv">
+
           <p id="convHistLabel">Conversion History</p>
           <table id="conversionHistory">
             <thead>
@@ -685,7 +685,6 @@ function ConverterForm() {
 function Footer() {
   return (
     <footer>
-        <p>         
             Written in C# and .NET (with React + Javascript) by David Wagner - 2023 <br />
             <br />
             <a href="https://github.com/devdavidwagner/CurrencyConverter">
@@ -694,7 +693,6 @@ function Footer() {
             <a href="https://www.linkedin.com/in/david-karl-wagner/">
               <img src="/images/LinkedIn-Mark.PNG" alt="LinkedIn" width="20" height="20" style={{ verticalAlign: 'middle', paddingLeft: '25px' }} /> My LinkedIn
             </a>
-      </p>
     </footer>
   );
 }
@@ -786,28 +784,28 @@ function Flags(){
       <div id = "flags">
         <h2 id = "quickSel">Currency Stats:</h2>
         <p>(Click on a flag for currency info)</p>
-        
-      {showDialog && (
-        <div className="dialog">
-          <div className="dialog-content">
-            <img src={selectedImage} alt="Selected Image" className="imageDialog"/>
-            <button onClick={closeDialog} id ="imgBtn">Close</button>
+          
+        {showDialog && (
+          <div className="dialog">
+            <div className="dialog-content">
+              <img src={selectedImage} alt="Selected Image" className="imageDialog"/>
+              <button onClick={closeDialog} id ="imgBtn">Close</button>
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-        {imageUrls.map((imageUrl, index) => (
-        <div key={index} className="image-grid-container">
-          <img
-            src={imageUrl}
-            alt={`Image ${index}`}
-            width="30"
-            height="25"
-            className="image-grid-item"
-            onClick={() => openDialog(imageUrl)}
-          />
-        </div>
-      ))}
+          {imageUrls.map((imageUrl, index) => (
+          <div id="gridCont" key={index} className="image-grid-container">
+            <img
+              src={imageUrl}
+              alt={`Image ${index}`}
+              width="30"
+              height="25"
+              className="image-grid-item"
+              onClick={() => openDialog(imageUrl)}
+            />
+          </div>
+        ))}
 
 
       </div>
